@@ -456,10 +456,10 @@ html,body{
 .det-room{
   width:100%;height:255px;
   background:linear-gradient(155deg,#0a0a1c,#0f1428,#0a1020);
-  display:flex;align-items:center;justify-content:center;
-  font-size:80px;position:relative;overflow:hidden;
+  display:block;
+  position:relative;overflow:hidden;
 }
-#cvs{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+#cvs{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair;display:block}
 
 .det-ai-badge{
   position:absolute;top:12px;left:12px;
@@ -1294,7 +1294,6 @@ html,body{
       <div id="cvs-area" style="display:none">
         <div class="det-wrap anim">
           <div class="det-room" id="cvs-room">
-            🛋️
             <canvas id="cvs"></canvas>
           </div>
           <div class="det-ai-badge">
