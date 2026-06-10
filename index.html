@@ -2280,17 +2280,67 @@ function navTo(n,id){
 
 // UPLOAD
 function doUpload(){
-  const z=document.getElementById('dropZone');
+  if(tg){
+    tg.showPopup({
+      title: '📷 Rasm yuklash',
+      message: 'Rasmni qayerdan olasiz?',
+      buttons: [
+        {id:'pick', type:'default', text:'📷 Kamera / 🖼️ Galereya'},
+        {id:'cancel', type:'cancel', text:'Bekor qilish'}
+      ]
+    }, function(btnId){
+      if(btnId==='pick') triggerFileInput();
+    });
+  } else {
+    triggerFileInput();
+  }
+}
+
+function triggerFileInput(){
+  let inp = document.getElementById('tg-file-inp');
+  if(!inp){
+    inp = document.createElement('input');
+    inp.type = 'file';
+    inp.id = 'tg-file-inp';
+    inp.accept = 'image/*';
+    inp.capture = 'environment';
+    inp.style.display = 'none';
+    document.body.appendChild(inp);
+  }
+  inp.onchange = function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      showUploadedPhoto(ev.target.result, file.name, (file.size/1024/1024).toFixed(1)+' MB');
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+}
+
+function showUploadedPhoto(src, name, size){
+  const z = document.getElementById('dropZone');
   z.classList.add('lit');
   z.innerHTML='<div class="ring" style="width:36px;height:36px;margin:0"></div><div style="font-size:13px;color:var(--t2);margin-top:10px">Yuklanmoqda...</div>';
   setTimeout(()=>{
     document.getElementById('drop-area').style.display='none';
-    document.getElementById('prev-area').style.display='block';
-    const ab=document.getElementById('analyzeBtn');
+    const pa = document.getElementById('prev-area');
+    pa.style.display='block';
+    // Show actual image
+    const inner = pa.querySelector('.img-preview-inner');
+    if(inner){
+      inner.innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:16px">`;
+    }
+    const fn = pa.querySelector('.fn');
+    const fs = pa.querySelector('.fs');
+    if(fn) fn.textContent = name;
+    if(fs) fs.textContent = size;
+    const ab = document.getElementById('analyzeBtn');
     ab.removeAttribute('disabled');
-    uploaded=true;
+    uploaded = true;
     toast('Rasm muvaffaqiyatli yuklandi ✓','ok');
-  },1400);
+  },800);
 }
 
 function rmPhoto(){
