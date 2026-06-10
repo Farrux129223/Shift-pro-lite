@@ -1,0 +1,2545 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#080810">
+<title>Shift Pro Lite</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+:root{
+  /* Core palette — luxury obsidian + platinum */
+  --ink:        #080810;
+  --ink2:       #0e0e1a;
+  --ink3:       #141422;
+  --ink4:       #1c1c2e;
+  --ink5:       #22223a;
+  --line:       #2a2a42;
+  --line2:      #343452;
+
+  /* Accent — electric cobalt with warm gold secondary */
+  --volt:       #4361ee;
+  --volt2:      #3a0ca3;
+  --volt-glow:  rgba(67,97,238,0.35);
+  --volt-soft:  rgba(67,97,238,0.12);
+  --gold:       #f4d03f;
+  --gold2:      #e8b931;
+  --gold-soft:  rgba(244,208,63,0.10);
+  --gold-glow:  rgba(244,208,63,0.25);
+
+  /* Semantic */
+  --emerald:    #2ecc71;
+  --ember:      #e74c3c;
+  --sky:        #48cae4;
+
+  /* Text */
+  --t1: #f0f0ff;
+  --t2: #9090b8;
+  --t3: #50507a;
+
+  --sans: 'Satoshi', sans-serif;
+  --display: 'Satoshi', sans-serif;
+  --r: 16px;
+  --r-sm: 10px;
+  --r-lg: 22px;
+}
+
+html,body{
+  height:100%;
+  height:100dvh;
+  background:var(--ink);
+  font-family:var(--sans);
+  overflow:hidden;
+}
+
+/* ─── SHELL — Mini App fullscreen ─── */
+.shell{
+  width:100%;
+  height:100dvh;
+  background:var(--ink);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+
+/* Ambient glow layer */
+.shell::before{
+  content:'';position:absolute;
+  width:320px;height:320px;
+  background:radial-gradient(circle, rgba(67,97,238,0.08) 0%, transparent 70%);
+  top:-80px;right:-60px;pointer-events:none;z-index:0;
+  animation: driftGlow 8s ease-in-out infinite alternate;
+}
+@keyframes driftGlow{
+  from{transform:translate(0,0) scale(1);}
+  to{transform:translate(-30px,40px) scale(1.2);}
+}
+
+/* ─── STATUS BAR — Mini App da yashiriladi ─── */
+.status{
+  display:none;
+}
+
+/* ─── NAV BAR ─── */
+.navbar{
+  height:60px;display:flex;align-items:center;
+  padding:0 8px;gap:0;
+  flex-shrink:0;
+  background:rgba(8,8,16,0.95);
+  backdrop-filter:blur(20px);
+  border-top:1px solid rgba(255,255,255,0.06);
+  position:relative;z-index:10;
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:4px;padding:8px 4px;cursor:pointer;
+  background:none;border:none;position:relative;
+}
+.nav-btn svg{width:22px;height:22px;transition:all .3s}
+.nav-btn span{font-size:9.5px;font-weight:600;color:var(--t3);
+  letter-spacing:.4px;text-transform:uppercase;transition:color .3s}
+.nav-btn.on svg{filter:drop-shadow(0 0 6px var(--volt))}
+.nav-btn.on span{color:var(--volt)}
+.nav-btn.on::after{
+  content:'';position:absolute;bottom:-1px;left:50%;
+  transform:translateX(-50%);
+  width:24px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--volt),#7b9eff);
+}
+
+/* ─── SCREEN ─── */
+.screen{
+  display:none;flex:1;flex-direction:column;
+  overflow:hidden;position:relative;z-index:1;
+}
+.screen.on{display:flex}
+
+/* ─── SCROLL AREA ─── */
+.scroll{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:none;
+  padding-bottom:24px;
+}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ─── TOP HEADER ─── */
+.topbar{
+  height:58px;display:flex;align-items:center;
+  padding:0 18px;gap:12px;flex-shrink:0;
+  background:rgba(8,8,16,0.5);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  position:relative;z-index:5;
+}
+.tbk{
+  width:38px;height:38px;border-radius:11px;
+  background:var(--ink4);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;color:var(--t1);font-size:18px;
+  transition:background .2s;
+}
+.tbk:hover{background:var(--ink5)}
+.tb-title{flex:1;font-size:17px;font-weight:700;color:var(--t1);letter-spacing:-.3px}
+.tb-action{font-size:13px;font-weight:600;color:var(--volt);
+  background:none;border:none;cursor:pointer;padding:8px;font-family:var(--sans)}
+
+/* ─── STEP DOTS ─── */
+.stepper{
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;padding:14px 18px;flex-shrink:0;
+}
+.step-dot{
+  height:3px;border-radius:3px;
+  background:var(--line);transition:all .4s cubic-bezier(.4,0,.2,1);
+}
+.step-dot.past{background:var(--volt);width:18px;opacity:.5}
+.step-dot.now{background:linear-gradient(90deg,var(--volt),#7b9eff);width:28px;
+  box-shadow:0 0 8px var(--volt-glow)}
+.step-dot.future{width:8px}
+
+/* ════════════════════════════════
+   HOME SCREEN
+════════════════════════════════ */
+.home-hero{
+  margin:20px 18px 0;
+  padding:22px;
+  background:linear-gradient(135deg,var(--volt2) 0%,var(--volt) 60%,#5a7fff 100%);
+  border-radius:var(--r-lg);
+  position:relative;overflow:hidden;
+}
+.home-hero::before{
+  content:'';position:absolute;
+  width:180px;height:180px;border-radius:50%;
+  background:rgba(255,255,255,.06);
+  top:-40px;right:-40px;
+}
+.home-hero::after{
+  content:'';position:absolute;
+  width:100px;height:100px;border-radius:50%;
+  background:rgba(255,255,255,.04);
+  bottom:-20px;left:40px;
+}
+.hero-eyebrow{
+  font-size:11px;font-weight:600;color:rgba(255,255,255,.65);
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;
+}
+.hero-h{font-size:26px;font-weight:900;color:#fff;line-height:1.1;
+  letter-spacing:-.5px;margin-bottom:12px;position:relative;z-index:1}
+.hero-h em{font-style:normal;color:var(--gold)}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:50px;padding:10px 18px;
+  font-size:13px;font-weight:700;color:#fff;
+  cursor:pointer;transition:all .2s;
+  position:relative;z-index:1;
+}
+.hero-cta:active{transform:scale(.96)}
+.hero-cta-arrow{
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;font-size:12px;
+}
+
+/* PLAN CARD */
+.plan-strip{
+  margin:14px 18px;
+  background:var(--ink3);
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+}
+.plan-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 10px var(--gold-glow);
+  flex-shrink:0;animation:pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot{0%,100%{box-shadow:0 0 6px var(--gold-glow)}50%{box-shadow:0 0 16px var(--gold-glow)}}
+.ps-info{flex:1}
+.ps-name{font-size:14px;font-weight:700;color:var(--t1)}
+.ps-sub{font-size:12px;color:var(--t3);margin-top:2px}
+.ps-btn{
+  padding:7px 14px;border-radius:50px;
+  background:var(--gold-soft);border:1px solid rgba(244,208,63,.25);
+  font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;
+  font-family:var(--sans);white-space:nowrap;transition:all .2s;
+}
+.ps-btn:active{background:rgba(244,208,63,.2)}
+
+/* USAGE METERS */
+.usage-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:10px;margin:0 18px 20px;
+}
+.u-card{
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:14px 12px;
+}
+.u-icon{font-size:16px;margin-bottom:8px}
+.u-val{font-size:20px;font-weight:900;color:var(--t1);line-height:1}
+.u-max{font-size:10px;color:var(--t3);margin-top:2px}
+.u-track{
+  height:2px;background:var(--line2);border-radius:2px;
+  margin-top:10px;overflow:hidden;
+}
+.u-fill{
+  height:100%;border-radius:2px;
+  background:linear-gradient(90deg,var(--volt),#7b9eff);
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+}
+.u-fill.hot{background:linear-gradient(90deg,var(--ember),#ff8888)}
+
+/* SECTION HEADER */
+.sec{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;margin-bottom:12px;
+}
+.sec-title{font-size:13px;font-weight:700;color:var(--t2);
+  letter-spacing:.8px;text-transform:uppercase}
+.sec-link{font-size:12px;font-weight:600;color:var(--volt)}
+
+/* BIG NEW DESIGN BTN */
+.new-btn{
+  margin:0 18px 20px;
+  background:var(--ink3);
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  padding:18px;
+  display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:all .25s;
+  position:relative;overflow:hidden;
+}
+.new-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--volt-soft),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.new-btn:hover::before,.new-btn:active::before{opacity:1}
+.nb-icon{
+  width:54px;height:54px;border-radius:14px;
+  background:linear-gradient(135deg,var(--volt2),var(--volt));
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;flex-shrink:0;
+  box-shadow:0 8px 20px var(--volt-glow);
+}
+.nb-text{}
+.nb-t{font-size:17px;font-weight:800;color:var(--t1);letter-spacing:-.3px}
+.nb-s{font-size:12px;color:var(--t3);margin-top:3px}
+.nb-arr{
+  margin-left:auto;width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--t3);font-size:14px;transition:all .3s;flex-shrink:0;
+}
+.new-btn:hover .nb-arr{border-color:var(--volt);color:var(--volt)}
+
+/* ORDER CARDS */
+.order-list{display:flex;flex-direction:column;gap:8px;padding:0 18px}
+.ocard{
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  display:flex;align-items:center;gap:12px;
+  padding:13px 14px;cursor:pointer;transition:all .2s;
+}
+.ocard:active{background:var(--ink4)}
+.o-thumb{
+  width:46px;height:46px;border-radius:10px;
+  background:linear-gradient(135deg,var(--ink4),var(--ink5));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+  border:1px solid var(--line);
+}
+.o-info{flex:1;min-width:0}
+.o-name{font-size:14px;font-weight:600;color:var(--t1);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.o-meta{font-size:11px;color:var(--t3);margin-top:3px}
+.o-badge{
+  font-size:10px;font-weight:700;padding:4px 9px;
+  border-radius:50px;letter-spacing:.3px;text-transform:uppercase;
+  white-space:nowrap;
+}
+.b-new{background:rgba(67,97,238,.15);color:#7b9eff;border:1px solid rgba(67,97,238,.25)}
+.b-ok{background:rgba(46,204,113,.12);color:var(--emerald);border:1px solid rgba(46,204,113,.2)}
+.b-wait{background:rgba(244,208,63,.1);color:var(--gold);border:1px solid rgba(244,208,63,.2)}
+
+/* ════════════════════════════════
+   UPLOAD SCREEN
+════════════════════════════════ */
+.upload-drop{
+  margin:18px;border-radius:var(--r-lg);
+  border:1.5px dashed var(--line2);
+  background:var(--ink3);
+  padding:52px 24px;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  cursor:pointer;transition:all .3s;
+  position:relative;overflow:hidden;
+}
+.upload-drop::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 50%,var(--volt-soft),transparent 70%);
+  opacity:0;transition:opacity .3s;
+}
+.upload-drop:hover,.upload-drop.lit{border-color:var(--volt);background:rgba(67,97,238,.05)}
+.upload-drop:hover::before,.upload-drop.lit::before{opacity:1}
+.ud-ring{
+  width:72px;height:72px;border-radius:50%;
+  border:2px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;position:relative;transition:all .3s;
+}
+.upload-drop:hover .ud-ring,.upload-drop.lit .ud-ring{
+  border-color:var(--volt);
+  box-shadow:0 0 20px var(--volt-glow);
+}
+.ud-h{font-size:17px;font-weight:700;color:var(--t1);text-align:center}
+.ud-s{font-size:13px;color:var(--t3);text-align:center;line-height:1.6}
+.ud-tag{
+  font-family:monospace;font-size:11px;color:var(--t3);
+  background:var(--ink4);border:1px solid var(--line);
+  padding:4px 12px;border-radius:50px;
+}
+
+.img-preview{
+  margin:0 18px 18px;border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--line);position:relative;
+}
+.img-preview-inner{
+  width:100%;height:230px;
+  background:linear-gradient(155deg,#0d0d20,#141432,#0a1628);
+  display:flex;align-items:center;justify-content:center;font-size:72px;
+}
+.img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(transparent 40%,rgba(8,8,16,.95));
+  display:flex;align-items:flex-end;padding:16px;
+  justify-content:space-between;
+}
+.img-info-txt .fn{font-size:13px;font-weight:700;color:var(--t1)}
+.img-info-txt .fs{font-size:11px;color:var(--t2);margin-top:2px}
+.remove-btn{
+  padding:7px 13px;border-radius:8px;
+  background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.25);
+  font-size:12px;font-weight:700;color:var(--ember);
+  cursor:pointer;font-family:var(--sans);
+}
+
+.tips-box{
+  margin:0 18px 18px;padding:16px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-sm);
+}
+.tips-hd{
+  font-size:12px;font-weight:700;color:var(--t2);
+  letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;gap:7px;
+}
+.tip-row{
+  display:flex;gap:10px;padding:5px 0;font-size:12px;color:var(--t2);
+  align-items:flex-start;
+}
+.tip-dot{
+  width:5px;height:5px;border-radius:50%;background:var(--volt);
+  margin-top:5px;flex-shrink:0;
+}
+
+/* ─── BUTTONS ─── */
+.btn{
+  width:100%;padding:15px;border-radius:var(--r-sm);border:none;
+  font-size:15px;font-weight:800;cursor:pointer;
+  font-family:var(--sans);letter-spacing:-.2px;
+  transition:all .2s;
+}
+.btn:active{transform:scale(.97)}
+.btn-volt{
+  background:linear-gradient(135deg,var(--volt2),var(--volt));
+  color:#fff;
+  box-shadow:0 8px 24px var(--volt-glow);
+}
+.btn-volt:disabled{
+  background:var(--ink5);color:var(--t3);
+  box-shadow:none;cursor:not-allowed;transform:none;
+}
+.btn-ghost{
+  background:var(--ink4);border:1px solid var(--line2);
+  color:var(--t2);
+}
+.btn-danger{
+  background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.2);
+  color:var(--ember);
+}
+.btn-success{
+  background:linear-gradient(135deg,#1a8a4a,var(--emerald));
+  color:#fff;box-shadow:0 8px 20px rgba(46,204,113,.2);
+}
+.btn-gold{
+  background:linear-gradient(135deg,#b8860b,var(--gold));
+  color:#0a0a0a;box-shadow:0 8px 20px rgba(244,208,63,.2);
+}
+.px-18{padding-left:18px;padding-right:18px}
+
+/* ════════════════════════════════
+   DETECTION SCREEN
+════════════════════════════════ */
+.det-wrap{
+  margin:18px;border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--line);position:relative;
+  background:var(--ink2);
+}
+.det-room{
+  width:100%;height:255px;
+  background:linear-gradient(155deg,#0a0a1c,#0f1428,#0a1020);
+  display:flex;align-items:center;justify-content:center;
+  font-size:80px;position:relative;overflow:hidden;
+}
+#cvs{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+
+.det-ai-badge{
+  position:absolute;top:12px;left:12px;
+  background:rgba(8,8,22,.8);backdrop-filter:blur(12px);
+  border:1px solid rgba(67,97,238,.3);
+  border-radius:8px;padding:6px 12px;
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:700;color:var(--volt);
+  letter-spacing:.3px;
+}
+.ai-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--volt);
+  animation:pulseDot 1.5s infinite;
+}
+
+.conf-card{
+  margin:0 18px 12px;padding:14px 16px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  display:flex;align-items:center;gap:14px;
+}
+.conf-pct{
+  font-size:28px;font-weight:900;color:var(--emerald);
+  line-height:1;min-width:56px;
+}
+.conf-right{flex:1}
+.conf-lbl{font-size:11px;color:var(--t3);margin-bottom:6px;
+  text-transform:uppercase;letter-spacing:.6px}
+.conf-bar{height:4px;background:var(--line2);border-radius:2px;overflow:hidden}
+.conf-fill{
+  height:100%;border-radius:2px;
+  background:linear-gradient(90deg,var(--emerald),#5fffaa);
+  box-shadow:0 0 6px rgba(46,204,113,.4);
+  transition:width .8s cubic-bezier(.4,0,.2,1);
+}
+
+.hint-pill{
+  margin:0 18px 14px;padding:9px 14px;
+  background:var(--gold-soft);border:1px solid rgba(244,208,63,.15);
+  border-radius:50px;
+  font-size:11px;font-weight:600;color:var(--gold);
+  text-align:center;letter-spacing:.3px;
+}
+
+.det-btns{display:flex;gap:10px;padding:0 18px 4px}
+
+/* LOADING RING */
+.ring{
+  width:44px;height:44px;border-radius:50%;
+  border:3px solid var(--ink5);border-top-color:var(--volt);
+  animation:spin 1s linear infinite;margin:32px auto 16px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{text-align:center;font-size:13px;color:var(--t2);margin-bottom:6px}
+.load-sub{text-align:center;font-size:11px;color:var(--t3);font-family:monospace}
+
+/* ════════════════════════════════
+   MATERIAL SCREEN
+════════════════════════════════ */
+.seg{
+  margin:16px 18px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:50px;padding:4px;display:flex;gap:4px;
+}
+.seg-btn{
+  flex:1;padding:10px;border-radius:50px;border:none;
+  font-size:13px;font-weight:700;color:var(--t3);
+  cursor:pointer;transition:all .3s;font-family:var(--sans);
+  background:none;
+}
+.seg-btn.on{
+  background:linear-gradient(135deg,var(--volt2),var(--volt));
+  color:#fff;
+  box-shadow:0 4px 14px var(--volt-glow);
+}
+
+.swatch-row{
+  display:flex;gap:10px;padding:0 18px 18px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.swatch-row::-webkit-scrollbar{display:none}
+.sw{
+  flex-shrink:0;display:flex;flex-direction:column;
+  align-items:center;gap:7px;cursor:pointer;
+}
+.sw-circle{
+  width:60px;height:60px;border-radius:50%;
+  border:2.5px solid transparent;
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.sw.sel .sw-circle{
+  border-color:var(--volt);
+  box-shadow:0 0 0 4px var(--volt-soft),0 0 16px var(--volt-glow);
+}
+.sw-circle::after{
+  content:'✓';
+  position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;font-size:18px;font-weight:900;color:#fff;
+  background:rgba(67,97,238,.5);opacity:0;transition:opacity .2s;
+}
+.sw.sel .sw-circle::after{opacity:1}
+.sw-name{font-size:10px;font-weight:600;color:var(--t3);
+  text-align:center;width:64px;line-height:1.3}
+.sw.sel .sw-name{color:var(--volt)}
+
+.mat-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  padding:0 18px 18px;
+}
+.mcard{
+  background:var(--ink3);border:1.5px solid var(--line);
+  border-radius:var(--r-sm);overflow:hidden;
+  cursor:pointer;transition:all .25s;
+}
+.mcard:active{transform:scale(.97)}
+.mcard.sel{
+  border-color:var(--volt);
+  background:linear-gradient(135deg,rgba(67,97,238,.1),var(--ink3));
+  box-shadow:0 4px 16px var(--volt-glow);
+}
+.mcard-img{
+  width:100%;aspect-ratio:1;
+  background:var(--ink4);
+  display:flex;align-items:center;justify-content:center;font-size:38px;
+}
+.mcard-body{padding:11px}
+.mcard-name{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:3px}
+.mcard-price{font-size:12px;color:var(--volt);font-weight:700}
+.mcard-sel-dot{
+  display:none;width:18px;height:18px;border-radius:50%;
+  background:var(--volt);position:absolute;top:8px;right:8px;
+  align-items:center;justify-content:center;font-size:10px;color:#fff;
+}
+.mcard{position:relative}
+.mcard.sel .mcard-sel-dot{display:flex}
+
+/* ════════════════════════════════
+   TELEGRAM CATALOG GRID
+════════════════════════════════ */
+.cat-section{margin-bottom:8px}
+.cat-hd{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 18px 10px;
+}
+.cat-hd-icon{font-size:16px}
+.cat-hd-title{font-size:14px;font-weight:800;color:var(--t1);flex:1}
+.cat-hd-count{font-size:11px;font-weight:600;color:var(--t3);
+  background:var(--ink4);border:1px solid var(--line);
+  padding:3px 9px;border-radius:50px}
+.photo-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:10px;padding:0 18px 8px;
+}
+.pg-item{
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-sm);overflow:hidden;
+  cursor:pointer;transition:all .2s;
+}
+.pg-item:active{transform:scale(.96);border-color:var(--volt)}
+.pg-img{
+  width:100%;aspect-ratio:4/3;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.pg-emoji{font-size:38px}
+.pg-name{font-size:12px;font-weight:700;color:var(--t1);padding:8px 10px 2px}
+.pg-price{font-size:11px;font-weight:600;color:var(--volt);padding:0 10px 10px}
+
+
+.cat-scroll{
+  display:flex;gap:8px;padding:0 18px 16px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.cat-scroll::-webkit-scrollbar{display:none}
+.cpill{
+  flex-shrink:0;padding:8px 16px;border-radius:50px;
+  font-size:12px;font-weight:700;
+  border:1px solid var(--line2);background:none;
+  color:var(--t3);cursor:pointer;transition:all .25s;
+  font-family:var(--sans);white-space:nowrap;
+}
+.cpill.on{
+  background:linear-gradient(135deg,var(--volt2),var(--volt));
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 12px var(--volt-glow);
+}
+
+.litem{
+  margin:0 18px 10px;padding:16px;
+  background:var(--ink3);border:1.5px solid var(--line);
+  border-radius:var(--r-sm);
+  display:flex;align-items:center;gap:13px;
+  cursor:pointer;transition:all .25s;
+}
+.litem.sel{
+  border-color:var(--volt);background:rgba(67,97,238,.08);
+  box-shadow:0 4px 16px rgba(67,97,238,.12);
+}
+.litem:active{transform:scale(.98)}
+.li-icon{
+  width:46px;height:46px;border-radius:12px;
+  background:var(--ink4);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;transition:all .3s;
+}
+.litem.sel .li-icon{
+  background:var(--volt-soft);border-color:rgba(67,97,238,.3);
+}
+.li-info{flex:1}
+.li-name{font-size:14px;font-weight:700;color:var(--t1)}
+.li-desc{font-size:11px;color:var(--t3);margin-top:3px}
+.li-price{font-size:12px;font-weight:800;color:var(--volt);margin-top:1px}
+.li-check{
+  width:26px;height:26px;border-radius:50%;
+  border:2px solid var(--line2);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:var(--t3);transition:all .3s;
+}
+.litem.sel .li-check{
+  background:var(--volt);border-color:var(--volt);color:#fff;
+  box-shadow:0 0 10px var(--volt-glow);
+}
+
+/* ════════════════════════════════
+   PREVIEW SCREEN
+════════════════════════════════ */
+.prev-card{
+  margin:18px;border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid var(--line);
+  background:var(--ink3);
+}
+.prev-vis{
+  width:100%;height:210px;
+  background:linear-gradient(155deg,#060618,#0a0f2e,#061020);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.prev-svg{width:84%;position:relative;z-index:1}
+.prev-wm{
+  position:absolute;inset:0;display:flex;
+  align-items:center;justify-content:center;pointer-events:none;
+  z-index:2;
+}
+.wm-txt{
+  font-size:24px;font-weight:900;
+  color:rgba(255,255,255,.05);
+  transform:rotate(-25deg);letter-spacing:4px;
+  text-shadow:none;user-select:none;white-space:nowrap;
+}
+.prev-tag{
+  position:absolute;top:12px;left:12px;z-index:3;
+  background:rgba(8,8,22,.85);backdrop-filter:blur(10px);
+  border:1px solid var(--line2);border-radius:8px;
+  padding:5px 11px;font-size:11px;font-weight:700;color:var(--t2);
+}
+
+.prev-specs{padding:18px}
+.ps-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);
+}
+.ps-row:last-child{border:none}
+.psl{font-size:12px;color:var(--t3)}
+.psv{font-size:13px;font-weight:700;color:var(--t1)}
+.psv.accent{color:var(--volt)}
+.prev-total{
+  padding:16px 18px;margin:0 18px;
+  background:var(--ink4);border:1px solid var(--line);
+  border-radius:var(--r-sm);margin-bottom:14px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.pt-l{font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+.pt-v{font-size:22px;font-weight:900;color:var(--t1)}
+.pt-v span{font-size:12px;color:var(--t3);font-weight:400}
+
+.wm-notice{
+  margin:0 18px 14px;padding:11px 14px;
+  background:rgba(244,208,63,.07);border:1px solid rgba(244,208,63,.18);
+  border-radius:var(--r-sm);
+  font-size:12px;font-weight:600;color:var(--gold);
+  display:flex;align-items:center;gap:9px;
+}
+
+.prev-btns{display:flex;gap:10px;padding:0 18px}
+
+/* ════════════════════════════════
+   ADMIN SCREEN
+════════════════════════════════ */
+.admin-hero{
+  margin:18px;padding:20px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-lg);
+}
+.ah-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.ah-logo{
+  width:48px;height:48px;border-radius:14px;
+  background:linear-gradient(135deg,var(--volt2),var(--volt));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;box-shadow:0 6px 16px var(--volt-glow);
+}
+.ah-name{font-size:16px;font-weight:800;color:var(--t1);letter-spacing:-.3px}
+.ah-plan{font-size:12px;color:var(--t3);margin-top:3px;display:flex;align-items:center;gap:6px}
+.ah-plan-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 6px var(--gold-glow)}
+
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kpi{
+  background:var(--ink4);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:12px 8px;text-align:center;
+}
+.kpi-v{font-size:22px;font-weight:900;color:var(--t1);line-height:1}
+.kpi-l{font-size:9px;color:var(--t3);margin-top:4px;text-transform:uppercase;letter-spacing:.4px}
+
+.chart-box{
+  margin:0 18px 18px;padding:16px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-sm);
+}
+.chart-hd{font-size:12px;font-weight:700;color:var(--t3);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between}
+.chart-hd span{font-size:13px;color:var(--volt);font-weight:800;letter-spacing:0;text-transform:none}
+.bars{display:flex;gap:5px;align-items:flex-end;height:56px}
+.bar-w{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bar{
+  width:100%;border-radius:4px 4px 0 0;
+  background:linear-gradient(180deg,var(--volt),var(--volt2));
+  opacity:.7;transition:opacity .2s;min-height:4px;
+}
+.bar:hover{opacity:1}
+.bar-l{font-size:9px;color:var(--t3);font-family:monospace}
+
+.menu-row{
+  margin:0 18px 10px;padding:15px 16px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  display:flex;align-items:center;gap:13px;
+  cursor:pointer;transition:all .2s;
+}
+.menu-row:active{background:var(--ink4)}
+.mr-icon{
+  width:42px;height:42px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.ic-volt{background:rgba(67,97,238,.12)}
+.ic-gold{background:rgba(244,208,63,.1)}
+.ic-green{background:rgba(46,204,113,.1)}
+.ic-sky{background:rgba(72,202,228,.1)}
+.mr-text{flex:1}
+.mr-t{font-size:14px;font-weight:700;color:var(--t1)}
+.mr-s{font-size:12px;color:var(--t3);margin-top:2px}
+.mr-r{color:var(--t3);font-size:16px}
+.mr-badge{
+  min-width:20px;height:20px;border-radius:50%;
+  background:var(--ember);color:#fff;font-size:10px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;padding:0 5px;
+}
+
+/* ════════════════════════════════
+   SUPER ADMIN
+════════════════════════════════ */
+.sa-banner{
+  margin:18px 18px 0;padding:20px;
+  background:linear-gradient(135deg,#1a0a3a,#2d1060,#1a0a3a);
+  border:1px solid rgba(167,139,250,.2);border-radius:var(--r-lg);
+  position:relative;overflow:hidden;
+}
+.sa-banner::before{
+  content:'';position:absolute;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(167,139,250,.15),transparent 70%);
+  top:-60px;right:-40px;
+}
+.sa-icon{font-size:28px;margin-bottom:10px}
+.sa-title{font-size:18px;font-weight:900;color:#fff;letter-spacing:-.3px;margin-bottom:4px}
+.sa-sub{font-size:12px;color:rgba(255,255,255,.5)}
+.sa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.sa-kpi{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:12px 8px;text-align:center;
+}
+.sa-kpi-v{font-size:22px;font-weight:900;color:#fff;line-height:1}
+.sa-kpi-l{font-size:9px;color:rgba(255,255,255,.45);margin-top:4px;
+  text-transform:uppercase;letter-spacing:.5px}
+
+.pay-card{
+  margin:0 18px 10px;padding:16px;
+  background:var(--ink3);
+  border:1px solid rgba(244,208,63,.2);
+  border-radius:var(--r-sm);
+}
+.pc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.pc-co{font-size:15px;font-weight:800;color:var(--t1)}
+.pc-plan{font-size:11px;color:var(--t3);margin-top:3px}
+.pc-amt{font-size:18px;font-weight:900;color:var(--gold)}
+.pc-date{font-size:10px;color:var(--t3);font-family:monospace;margin-top:2px;text-align:right}
+.pc-receipt{
+  font-size:11px;color:var(--t3);padding:8px 12px;
+  background:var(--ink4);border:1px solid var(--line);
+  border-radius:7px;margin-bottom:10px;
+  display:flex;align-items:center;gap:7px;
+}
+.pc-btns{display:flex;gap:8px}
+.pc-rej{
+  flex:1;padding:10px;border-radius:8px;border:none;
+  background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.2);
+  font-size:12px;font-weight:800;color:var(--ember);
+  cursor:pointer;font-family:var(--sans);
+}
+.pc-ok{
+  flex:2;padding:10px;border-radius:8px;border:none;
+  background:linear-gradient(135deg,#1a8a4a,var(--emerald));
+  font-size:12px;font-weight:800;color:#fff;
+  cursor:pointer;font-family:var(--sans);
+  box-shadow:0 4px 12px rgba(46,204,113,.2);
+}
+
+.ali{
+  margin:0 18px 8px;padding:13px 15px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  display:flex;align-items:center;gap:12px;cursor:pointer;
+}
+.ali:active{background:var(--ink4)}
+.ali-av{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--volt2),var(--volt));
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:800;color:#fff;flex-shrink:0;
+}
+.ali-info{flex:1}
+.ali-name{font-size:14px;font-weight:700;color:var(--t1)}
+.ali-meta{font-size:11px;color:var(--t3);margin-top:3px}
+.plan-tag{
+  font-size:10px;font-weight:800;padding:3px 9px;
+  border-radius:50px;letter-spacing:.3px;text-transform:uppercase;
+}
+.pt-free{background:rgba(244,208,63,.1);color:var(--gold);border:1px solid rgba(244,208,63,.2)}
+.pt-pro{background:rgba(67,97,238,.1);color:#7b9eff;border:1px solid rgba(67,97,238,.2)}
+.pt-basic{background:rgba(46,204,113,.1);color:var(--emerald);border:1px solid rgba(46,204,113,.2)}
+
+/* ════════════════════════════════
+   SUBSCRIPTION
+════════════════════════════════ */
+.cur-plan-card{
+  margin:18px;padding:22px;
+  background:linear-gradient(135deg,var(--ink4) 0%,rgba(67,97,238,.08) 100%);
+  border:1px solid rgba(67,97,238,.2);border-radius:var(--r-lg);
+}
+.cp-lbl{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.cp-name{font-size:26px;font-weight:900;color:var(--t1);letter-spacing:-.5px}
+.cp-exp{font-size:12px;color:var(--t3);margin-top:4px;font-family:monospace}
+.cp-limits{display:flex;gap:20px;margin-top:16px;flex-wrap:wrap}
+.cpl{display:flex;flex-direction:column;gap:2px}
+.cpl-v{font-size:18px;font-weight:900;color:var(--t1)}
+.cpl-l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+
+.plan-card{
+  margin:0 18px 10px;padding:18px;
+  background:var(--ink3);border:1.5px solid var(--line);
+  border-radius:var(--r-sm);transition:all .25s;cursor:pointer;
+}
+.plan-card:active{transform:scale(.98)}
+.plan-card.cur{border-color:var(--volt);box-shadow:0 0 0 1px var(--volt)}
+.plan-card.pop{border-color:var(--sky);box-shadow:0 4px 20px rgba(72,202,228,.1)}
+.plan-pop-lbl{
+  font-size:10px;font-weight:800;color:var(--sky);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;
+  display:flex;align-items:center;gap:6px;
+}
+.ph{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.p-name{font-size:18px;font-weight:900;color:var(--t1);letter-spacing:-.3px}
+.p-price{font-size:20px;font-weight:900}
+.p-per{font-size:11px;color:var(--t3);font-weight:400}
+.feats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.feat{
+  font-size:11px;padding:4px 9px;border-radius:50px;
+  background:var(--ink4);border:1px solid var(--line2);
+  color:var(--t2);font-weight:600;
+}
+.feat.good{
+  background:rgba(46,204,113,.08);border-color:rgba(46,204,113,.2);
+  color:var(--emerald);
+}
+.p-btn{
+  width:100%;padding:12px;border-radius:9px;border:none;
+  font-size:13px;font-weight:800;cursor:pointer;font-family:var(--sans);
+  background:linear-gradient(135deg,var(--volt2),var(--volt));
+  color:#fff;box-shadow:0 6px 16px var(--volt-glow);
+  transition:all .2s;
+}
+.p-btn:active{transform:scale(.97)}
+.p-btn.dis{background:var(--ink5);color:var(--t3);box-shadow:none;cursor:default}
+
+/* ════════════════════════════════
+   MODALS
+════════════════════════════════ */
+.backdrop{
+  position:absolute;inset:0;background:rgba(0,0,0,.75);
+  backdrop-filter:blur(8px);z-index:300;
+  display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.backdrop.open{opacity:1;pointer-events:all}
+.sheet{
+  width:100%;background:var(--ink2);
+  border-radius:24px 24px 0 0;
+  border-top:1px solid var(--line);
+  padding:14px 18px 36px;
+  transform:translateY(100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+.backdrop.open .sheet{transform:translateY(0)}
+.handle{
+  width:40px;height:4px;border-radius:2px;
+  background:var(--line2);margin:0 auto 20px;
+}
+.sh-title{font-size:20px;font-weight:900;color:var(--t1);
+  letter-spacing:-.4px;margin-bottom:4px;text-align:center}
+.sh-sub{font-size:13px;color:var(--t3);text-align:center;margin-bottom:20px}
+
+.order-summary{
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:16px;margin-bottom:16px;
+}
+.os-row{
+  display:flex;justify-content:space-between;padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;
+}
+.os-row:last-child{border:none;padding-top:12px}
+.os-l{color:var(--t3)}
+.os-v{font-weight:700;color:var(--t1)}
+.os-v.big{font-size:18px;font-weight:900;color:var(--volt)}
+
+.pay-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.ps{display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--t2)}
+.ps-n{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:var(--volt-soft);border:1px solid rgba(67,97,238,.3);
+  color:var(--volt);font-size:11px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;margin-top:1px;
+}
+.card-num{
+  background:var(--ink4);border:1px solid var(--line2);
+  border-radius:9px;padding:13px 16px;
+  font-family:monospace;font-size:15px;
+  font-weight:700;color:var(--volt);
+  letter-spacing:2px;margin:4px 0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.copy-btn{
+  font-size:11px;font-weight:700;color:var(--t3);
+  background:var(--ink5);border:1px solid var(--line);
+  padding:4px 9px;border-radius:6px;cursor:pointer;
+  font-family:var(--sans);
+}
+
+/* TOAST */
+.toast{
+  position:absolute;bottom:88px;left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:var(--ink5);border:1px solid var(--line2);
+  padding:11px 20px;border-radius:50px;
+  font-size:13px;font-weight:700;color:var(--t1);
+  white-space:nowrap;opacity:0;
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+  z-index:9999;pointer-events:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(46,204,113,.4);color:var(--emerald)}
+.toast.err{border-color:rgba(231,76,60,.35);color:var(--ember)}
+.toast.info{border-color:rgba(67,97,238,.4);color:#7b9eff}
+
+/* CATALOG MANAGE */
+.ci{
+  margin:0 18px 10px;padding:14px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  display:flex;align-items:center;gap:13px;
+}
+.ci-img{
+  width:50px;height:50px;border-radius:10px;
+  background:var(--ink4);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;
+}
+.ci-info{flex:1}
+.ci-name{font-size:14px;font-weight:700;color:var(--t1)}
+.ci-meta{font-size:11px;color:var(--t3);margin-top:2px}
+.ci-acts{display:flex;gap:7px}
+.ci-edit{
+  padding:6px 12px;border-radius:7px;font-size:11px;font-weight:700;
+  background:var(--volt-soft);border:1px solid rgba(67,97,238,.25);
+  color:var(--volt);cursor:pointer;font-family:var(--sans);
+}
+.ci-del{
+  padding:6px 12px;border-radius:7px;font-size:11px;font-weight:700;
+  background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);
+  color:var(--ember);cursor:pointer;font-family:var(--sans);
+}
+.add-ci{
+  margin:0 18px 16px;padding:14px;
+  border:1.5px dashed var(--line2);border-radius:var(--r-sm);
+  background:none;width:calc(100% - 36px);
+  font-size:14px;font-weight:700;color:var(--volt);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  gap:8px;font-family:var(--sans);transition:all .2s;
+}
+.add-ci:hover{background:var(--volt-soft);border-color:var(--volt)}
+
+/* ORDER DETAIL */
+.od-img{
+  margin:18px;border-radius:var(--r);overflow:hidden;
+  height:190px;background:linear-gradient(155deg,#060618,#0a0f28,#06101c);
+  display:flex;align-items:center;justify-content:center;font-size:72px;
+  border:1px solid var(--line);
+}
+.od-sec{
+  margin:0 18px 14px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--r-sm);overflow:hidden;
+}
+.od-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);
+  font-size:13px;
+}
+.od-row:last-child{border:none}
+.od-l{color:var(--t3)}
+.od-v{font-weight:700;color:var(--t1)}
+.od-btns{display:flex;gap:10px;padding:0 18px}
+
+/* ANIMATIONS */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.anim{animation:fadeUp .4s cubic-bezier(.4,0,.2,1) both}
+.anim-1{animation-delay:.05s}
+.anim-2{animation-delay:.1s}
+.anim-3{animation-delay:.15s}
+.anim-4{animation-delay:.2s}
+.anim-5{animation-delay:.25s}
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- STATUS BAR -->
+  <div class="status">
+    <span class="s-time" id="clock">9:41</span>
+    <div class="s-icons">
+      <span>●●●</span>
+      <span>Wi-Fi</span>
+      <span>⬛</span>
+    </div>
+  </div>
+
+  <!-- ══════════════ HOME ══════════════ -->
+  <div class="screen on" id="s-home">
+    <div style="overflow-y:auto;overflow-x:hidden;flex:1;scrollbar-width:none;" id="home-scroll">
+
+      <div class="home-hero anim">
+        <div class="hero-eyebrow">Shift Pro Lite</div>
+        <div class="hero-h">Shift ceiling<br>design <em>smarter</em></div>
+        <button class="hero-cta" onclick="go('s-upload')">
+          Yangi dizayn
+          <div class="hero-cta-arrow">→</div>
+        </button>
+      </div>
+
+      <div class="plan-strip anim anim-1">
+        <div class="plan-dot"></div>
+        <div class="ps-info">
+          <div class="ps-name">Free Admin Reja</div>
+          <div class="ps-sub">10 AI skan · 10 katalog elementi</div>
+        </div>
+        <button class="ps-btn" onclick="go('s-sub')">Upgrade →</button>
+      </div>
+
+      <div class="usage-grid anim anim-2">
+        <div class="u-card">
+          <div class="u-icon">🤖</div>
+          <div class="u-val">7</div>
+          <div class="u-max">/ 10 AI</div>
+          <div class="u-track"><div class="u-fill hot" style="width:70%"></div></div>
+        </div>
+        <div class="u-card">
+          <div class="u-icon">📦</div>
+          <div class="u-val">4</div>
+          <div class="u-max">/ 10 catalog</div>
+          <div class="u-track"><div class="u-fill" style="width:40%"></div></div>
+        </div>
+        <div class="u-card">
+          <div class="u-icon">📋</div>
+          <div class="u-val">12</div>
+          <div class="u-max">/ 20 order</div>
+          <div class="u-track"><div class="u-fill" style="width:60%"></div></div>
+        </div>
+      </div>
+
+      <button class="new-btn anim anim-3" onclick="go('s-upload')">
+        <div class="nb-icon">📸</div>
+        <div class="nb-text">
+          <div class="nb-t">Yangi Dizayn</div>
+          <div class="nb-s">Xona rasmini yuklang</div>
+        </div>
+        <div class="nb-arr">→</div>
+      </button>
+
+      <div class="sec anim anim-4">
+        <span class="sec-title">So'nggi buyurtmalar</span>
+        <span class="sec-link">Barchasi →</span>
+      </div>
+      <div class="order-list anim anim-5">
+        <div class="ocard" onclick="go('s-order-detail')">
+          <div class="o-thumb">🛋️</div>
+          <div class="o-info">
+            <div class="o-name">Yashash xonasi shifti</div>
+            <div class="o-meta">Glossy White · 28 m² · 2 soat oldin</div>
+          </div>
+          <span class="o-badge b-new">Yangi</span>
+        </div>
+        <div class="ocard">
+          <div class="o-thumb">🛏️</div>
+          <div class="o-info">
+            <div class="o-name">Yotoqxona dizayni</div>
+            <div class="o-meta">Starry Sky · 18 m² · Kecha</div>
+          </div>
+          <span class="o-badge b-ok">Tayyor</span>
+        </div>
+        <div class="ocard">
+          <div class="o-thumb">🍽️</div>
+          <div class="o-info">
+            <div class="o-name">Oshxona shifti</div>
+            <div class="o-meta">Matte Black · 14 m² · 3 kun oldin</div>
+          </div>
+          <span class="o-badge b-wait">Kutilmoqda</span>
+        </div>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+    <div class="navbar">
+      <button class="nav-btn on" onclick="navTo(0,'s-home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4361ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Asosiy</span>
+      </button>
+      <button class="nav-btn" onclick="navTo(1,'s-upload')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <span>Yangi</span>
+      </button>
+      <button class="nav-btn" onclick="navTo(2,'s-admin')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Admin</span>
+      </button>
+      <button class="nav-btn" onclick="navTo(3,'s-super')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Super</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════ UPLOAD ══════════════ -->
+  <div class="screen" id="s-upload">
+    <div class="topbar">
+      <button class="tbk" onclick="go('s-home')">←</button>
+      <div class="tb-title">Rasm yuklash</div>
+    </div>
+    <div class="stepper">
+      <div class="step-dot past"></div>
+      <div class="step-dot now"></div>
+      <div class="step-dot future"></div>
+      <div class="step-dot future"></div>
+      <div class="step-dot future"></div>
+    </div>
+    <div class="scroll">
+      <div id="drop-area">
+        <div class="upload-drop anim" id="dropZone" onclick="doUpload()">
+          <div class="ud-ring">📷</div>
+          <div class="ud-h">Rasm tanlash</div>
+          <div class="ud-s">Xona rasmini oling yoki<br>galereyadan tanlang</div>
+          <div class="ud-tag">JPG · PNG · HEIC · max 10 MB</div>
+        </div>
+      </div>
+      <div id="prev-area" style="display:none">
+        <div class="img-preview anim">
+          <div class="img-preview-inner">🛋️</div>
+          <div class="img-overlay">
+            <div class="img-info-txt">
+              <div class="fn">yashash_xonasi.jpg</div>
+              <div class="fs">2.4 MB · 3024×4032px</div>
+            </div>
+            <button class="remove-btn" onclick="rmPhoto()">✕ O'chirish</button>
+          </div>
+        </div>
+      </div>
+      <div class="tips-box anim anim-1">
+        <div class="tips-hd">💡 Maslahatlar</div>
+        <div class="tip-row"><div class="tip-dot"></div>Xonaning burchagidan surating — butun shift ko'rinsin</div>
+        <div class="tip-row"><div class="tip-dot"></div>Yorug'lik yaxshi bo'lsa AI aniqroq ishlaydi</div>
+        <div class="tip-row"><div class="tip-dot"></div>Loyqa yoki qorong'i rasmlardan saqlaning</div>
+        <div class="tip-row"><div class="tip-dot"></div>Shift to'liq ko'rinishi shart</div>
+      </div>
+      <div class="px-18">
+        <button class="btn btn-volt anim anim-2" id="analyzeBtn" onclick="go('s-detect')" disabled>🔍 Shiftni tahlil qilish</button>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ DETECTION ══════════════ -->
+  <div class="screen" id="s-detect">
+    <div class="topbar">
+      <button class="tbk" onclick="go('s-upload')">←</button>
+      <div class="tb-title">AI Aniqlash</div>
+      <button class="tb-action" onclick="resetCvs()">Reset</button>
+    </div>
+    <div class="stepper">
+      <div class="step-dot past"></div>
+      <div class="step-dot past"></div>
+      <div class="step-dot now"></div>
+      <div class="step-dot future"></div>
+      <div class="step-dot future"></div>
+    </div>
+    <div class="scroll">
+      <div id="load-area" style="padding:40px 18px;text-align:center;">
+        <div class="ring"></div>
+        <div class="load-txt">AI shift konturini aniqlamoqda...</div>
+        <div class="load-sub">Gemini Vision API · Ishlov berilmoqda</div>
+      </div>
+      <div id="cvs-area" style="display:none">
+        <div class="det-wrap anim">
+          <div class="det-room" id="cvs-room">
+            🛋️
+            <canvas id="cvs"></canvas>
+          </div>
+          <div class="det-ai-badge">
+            <div class="ai-dot"></div>AI aniqlash · 84%
+          </div>
+        </div>
+        <div class="conf-card anim anim-1">
+          <div class="conf-pct" id="conf-pct">84%</div>
+          <div class="conf-right">
+            <div class="conf-lbl">AI ishonchlilik darajasi</div>
+            <div class="conf-bar"><div class="conf-fill" id="conf-fill" style="width:84%"></div></div>
+          </div>
+        </div>
+        <div class="hint-pill anim anim-2">✋ Sariq nuqtalarni suring — konturni moslashtiring</div>
+        <div class="det-btns anim anim-3">
+          <button class="btn btn-ghost" style="flex:1" onclick="reScan()">🔄 Qayta skan</button>
+          <button class="btn btn-volt" style="flex:2" onclick="go('s-material')">Tasdiqlash →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ MATERIAL ══════════════ -->
+  <div class="screen" id="s-material">
+    <div class="topbar">
+      <button class="tbk" onclick="go('s-detect')">←</button>
+      <div class="tb-title">Material tanlash</div>
+    </div>
+    <div class="stepper">
+      <div class="step-dot past"></div>
+      <div class="step-dot past"></div>
+      <div class="step-dot past"></div>
+      <div class="step-dot now"></div>
+      <div class="step-dot future"></div>
+    </div>
+    <div class="scroll">
+      <div class="seg">
+        <button class="seg-btn on" id="seg-solid" onclick="setMat('solid')">🎨 Odnotonli</button>
+        <button class="seg-btn" id="seg-foto" onclick="setMat('foto')">🖼️ Fotobosma</button>
+      </div>
+
+      <div id="solid-panel">
+        <div class="sec"><span class="sec-title">Tur tanlang</span></div>
+        <div class="swatch-row">
+          <div class="sw sel" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#e0e0e8,#f4f4f8)"></div>
+            <div class="sw-name">Glossy Oq</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#c0c0c8,#d8d8e0)"></div>
+            <div class="sw-name">Matte Oq</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#c0a070,#d8ba88)"></div>
+            <div class="sw-name">Champagne</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#1a1a22,#2a2a38)"></div>
+            <div class="sw-name">Qora Matte</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#b0d0f0,#c8e4ff)"></div>
+            <div class="sw-name">Ko'k Osmon</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:conic-gradient(#e8c98e,#c8a96e,#a8854a,#e8c98e)"></div>
+            <div class="sw-name">Oltin Ko'zgu</div>
+          </div>
+        </div>
+        <div class="sec"><span class="sec-title">Narx katalogi</span></div>
+        <div class="mat-grid">
+          <div class="mcard sel" onclick="selMCard(this)">
+            <div class="mcard-img">⚪</div>
+            <div class="mcard-body">
+              <div class="mcard-name">Standard Glossy</div>
+              <div class="mcard-price">85,000 so'm/m²</div>
+            </div>
+            <div class="mcard-sel-dot">✓</div>
+          </div>
+          <div class="mcard" onclick="selMCard(this)">
+            <div class="mcard-img">🟡</div>
+            <div class="mcard-body">
+              <div class="mcard-name">Premium Satin</div>
+              <div class="mcard-price">120,000 so'm/m²</div>
+            </div>
+            <div class="mcard-sel-dot">✓</div>
+          </div>
+          <div class="mcard" onclick="selMCard(this)">
+            <div class="mcard-img">⚫</div>
+            <div class="mcard-body">
+              <div class="mcard-name">Anti-Fog Matte</div>
+              <div class="mcard-price">140,000 so'm/m²</div>
+            </div>
+            <div class="mcard-sel-dot">✓</div>
+          </div>
+          <div class="mcard" onclick="selMCard(this)">
+            <div class="mcard-img">🔵</div>
+            <div class="mcard-body">
+              <div class="mcard-name">Translucent</div>
+              <div class="mcard-price">160,000 so'm/m²</div>
+            </div>
+            <div class="mcard-sel-dot">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="foto-panel" style="display:none">
+        <div class="sec"><span class="sec-title">Kategoriya</span></div>
+        <div class="swatch-row">
+          <div class="sw sel" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#0d1b4b,#1a3a7c);font-size:26px;display:flex;align-items:center;justify-content:center">🌌</div>
+            <div class="sw-name">Galaktika</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#1a3a1a,#2d5a2d);font-size:26px;display:flex;align-items:center;justify-content:center">🌲</div>
+            <div class="sw-name">O'rmon</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#87CEEB,#4682B4);font-size:26px;display:flex;align-items:center;justify-content:center">☁️</div>
+            <div class="sw-name">Osmon</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#2d1b69,#6b21a8);font-size:26px;display:flex;align-items:center;justify-content:center">✨</div>
+            <div class="sw-name">Abstrakt</div>
+          </div>
+        </div>
+        <div class="mat-grid">
+          <div class="mcard sel" onclick="selMCard(this)">
+            <div class="mcard-img">🌌</div>
+            <div class="mcard-body">
+              <div class="mcard-name">Yulduzli Tun</div>
+              <div class="mcard-price">180,000 so'm/m²</div>
+            </div>
+            <div class="mcard-sel-dot">✓</div>
+          </div>
+          <div class="mcard" onclick="selMCard(this)">
+            <div class="mcard-img">🌅</div>
+            <div class="mcard-body">
+              <div class="mcard-name">Okean Botqoq</div>
+              <div class="mcard-price">195,000 so'm/m²</div>
+            </div>
+            <div class="mcard-sel-dot">✓</div>
+          </div>
+          <div class="mcard" onclick="selMCard(this)">
+            <div class="mcard-img">🌸</div>
+            <div class="mcard-body">
+              <div class="mcard-name">Gilos Guli</div>
+              <div class="mcard-price">185,000 so'm/m²</div>
+            </div>
+            <div class="mcard-sel-dot">✓</div>
+          </div>
+          <div class="mcard" onclick="selMCard(this)">
+            <div class="mcard-img">🏔️</div>
+            <div class="mcard-body">
+              <div class="mcard-name">Tog' Manzarasi</div>
+              <div class="mcard-price">190,000 so'm/m²</div>
+            </div>
+            <div class="mcard-sel-dot">✓</div>
+          </div>
+        </div>
+      </div>
+      <div class="px-18">
+        <button class="btn btn-volt" onclick="go('s-lighting')">Keyingi: Yoritish →</button>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ LIGHTING ══════════════ -->
+  <div class="screen" id="s-lighting">
+    <div class="topbar">
+      <button class="tbk" onclick="go('s-material')">←</button>
+      <div class="tb-title">Yoritish elementlari</div>
+      <button class="tb-action" onclick="go('s-preview')">O'tkazib yubor</button>
+    </div>
+    <div class="stepper">
+      <div class="step-dot past"></div>
+      <div class="step-dot past"></div>
+      <div class="step-dot past"></div>
+      <div class="step-dot past"></div>
+      <div class="step-dot now"></div>
+    </div>
+    <div class="scroll">
+      <div class="cat-scroll">
+        <button class="cpill on" onclick="selCat(this)">Barchasi</button>
+        <button class="cpill" onclick="selCat(this)">💡 Световой</button>
+        <button class="cpill" onclick="selCat(this)">🔦 Track</button>
+        <button class="cpill" onclick="selCat(this)">〰️ LED</button>
+        <button class="cpill" onclick="selCat(this)">🔮 Lustura</button>
+        <button class="cpill" onclick="selCat(this)">• Spot</button>
+      </div>
+      <div class="litem anim" onclick="togLight(this)">
+        <div class="li-icon">💡</div>
+        <div class="li-info">
+          <div class="li-name">Световой Линия</div>
+          <div class="li-desc">LED chiziq, metr uchun</div>
+          <div class="li-price">25,000 so'm/m</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
+      <div class="litem sel anim anim-1" onclick="togLight(this)">
+        <div class="li-icon">🔦</div>
+        <div class="li-info">
+          <div class="li-name">Track Light 3-boshli</div>
+          <div class="li-desc">Regulyatorli rel tizimi</div>
+          <div class="li-price">180,000 so'm</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
+      <div class="litem anim anim-2" onclick="togLight(this)">
+        <div class="li-icon">〰️</div>
+        <div class="li-info">
+          <div class="li-name">LED Profil Iliq</div>
+          <div class="li-desc">3000K iliq oq lenta</div>
+          <div class="li-price">35,000 so'm/m</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
+      <div class="litem anim anim-3" onclick="togLight(this)">
+        <div class="li-icon">🔮</div>
+        <div class="li-info">
+          <div class="li-name">Kristall Lustura</div>
+          <div class="li-desc">Diametr 80sm · E27</div>
+          <div class="li-price">850,000 so'm</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
+      <div class="litem anim anim-4" onclick="togLight(this)">
+        <div class="li-icon">•</div>
+        <div class="li-info">
+          <div class="li-name">Spot Light GU10</div>
+          <div class="li-desc">7W LED · Dimmerli</div>
+          <div class="li-price">45,000 so'm</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
+      <div class="litem anim anim-5" onclick="togLight(this)">
+        <div class="li-icon">✨</div>
+        <div class="li-info">
+          <div class="li-name">Yulduz Osmon Kiti</div>
+          <div class="li-desc">Fiber optik · 150 ip</div>
+          <div class="li-price">1,200,000 so'm</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
+      <div class="px-18" style="padding-top:4px">
+        <button class="btn btn-volt" onclick="go('s-preview')">Dizaynni ko'rish →</button>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ PREVIEW ══════════════ -->
+  <div class="screen" id="s-preview">
+    <div class="topbar">
+      <button class="tbk" onclick="go('s-lighting')">←</button>
+      <div class="tb-title">Dizayn ko'rinishi</div>
+    </div>
+    <div class="scroll">
+      <div class="prev-card anim">
+        <div class="prev-vis">
+          <svg viewBox="0 0 300 150" class="prev-svg">
+            <defs>
+              <linearGradient id="ceilG" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#e8eaf8;stop-opacity:.92"/>
+                <stop offset="100%" style="stop-color:#c0c4e0;stop-opacity:.80"/>
+              </linearGradient>
+              <filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <polygon points="18,18 282,14 292,128 8,132" fill="url(#ceilG)" stroke="rgba(180,185,220,.6)" stroke-width="1.5"/>
+            <line x1="58" y1="18" x2="58" y2="130" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
+            <line x1="108" y1="16" x2="108" y2="131" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
+            <line x1="158" y1="15" x2="158" y2="131" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
+            <line x1="208" y1="15" x2="208" y2="131" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
+            <line x1="248" y1="15" x2="248" y2="130" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
+            <circle cx="83" cy="73" r="9" fill="rgba(255,225,80,.95)" stroke="#c8a000" stroke-width="1.5" filter="url(#glow)"/>
+            <circle cx="158" cy="72" r="9" fill="rgba(255,225,80,.95)" stroke="#c8a000" stroke-width="1.5" filter="url(#glow)"/>
+            <circle cx="233" cy="72" r="9" fill="rgba(255,225,80,.95)" stroke="#c8a000" stroke-width="1.5" filter="url(#glow)"/>
+            <line x1="60" y1="72" x2="260" y2="72" stroke="rgba(255,200,50,.25)" stroke-width="18" stroke-linecap="round"/>
+          </svg>
+          <div class="prev-wm"><div class="wm-txt">SHIFT PRO LITE</div></div>
+          <div class="prev-tag">Glossy White · Track Lights</div>
+        </div>
+        <div class="prev-specs">
+          <div class="ps-row"><span class="psl">Material</span><span class="psv">Standard Glossy</span></div>
+          <div class="ps-row"><span class="psl">Tur</span><span class="psv">Odnotonli</span></div>
+          <div class="ps-row"><span class="psl">Yoritish</span><span class="psv">Track Light 3-boshli</span></div>
+          <div class="ps-row"><span class="psl">Taxminiy maydon</span><span class="psv accent">28 m²</span></div>
+          <div class="ps-row"><span class="psl">Material narxi</span><span class="psv">2,380,000 so'm</span></div>
+          <div class="ps-row"><span class="psl">Yoritish narxi</span><span class="psv">180,000 so'm</span></div>
+        </div>
+      </div>
+      <div class="prev-total anim anim-1">
+        <span class="pt-l">Jami taxmin</span>
+        <span class="pt-v">2,560,000 <span>so'm</span></span>
+      </div>
+      <div class="wm-notice anim anim-2">⚠️ Pro rejaga o'ting — suratdan watermark olib tashlanadi</div>
+      <div class="prev-btns anim anim-3">
+        <button class="btn btn-ghost" style="flex:1" onclick="savePNG()">🖼️ Rasm</button>
+        <button class="btn btn-volt" style="flex:2" onclick="savePDF()">📄 PDF saqlash</button>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ ORDER DETAIL ══════════════ -->
+  <div class="screen" id="s-order-detail">
+    <div class="topbar">
+      <button class="tbk" onclick="go('s-home')">←</button>
+      <div class="tb-title">Buyurtma #0042</div>
+      <span class="o-badge b-new" style="font-size:10px">YANGI</span>
+    </div>
+    <div class="scroll">
+      <div class="od-img anim">🛋️</div>
+      <div class="sec anim anim-1"><span class="sec-title">Mijoz ma'lumotlari</span></div>
+      <div class="od-sec anim anim-1">
+        <div class="od-row"><span class="od-l">Ism</span><span class="od-v">Alisher Karimov</span></div>
+        <div class="od-row"><span class="od-l">Telegram</span><span class="od-v">@alisher_k</span></div>
+        <div class="od-row"><span class="od-l">Yuborilgan</span><span class="od-v">2 soat oldin</span></div>
+      </div>
+      <div class="sec anim anim-2"><span class="sec-title">Dizayn ma'lumotlari</span></div>
+      <div class="od-sec anim anim-2">
+        <div class="od-row"><span class="od-l">Material</span><span class="od-v">Standard Glossy</span></div>
+        <div class="od-row"><span class="od-l">Tur</span><span class="od-v">Odnotonli</span></div>
+        <div class="od-row"><span class="od-l">Yoritish</span><span class="od-v">Track Light 3-boshli</span></div>
+        <div class="od-row"><span class="od-l">Taxminiy maydon</span><span class="od-v" style="color:var(--volt)">28 m²</span></div>
+        <div class="od-row"><span class="od-l">Taxminiy narx</span><span class="od-v" style="color:var(--volt);font-size:16px">2,560,000 so'm</span></div>
+      </div>
+      <div class="od-btns anim anim-3">
+        <button class="btn btn-danger" style="flex:1" onclick="toast('Buyurtma rad etildi','err')">✕ Rad etish</button>
+        <button class="btn btn-success" style="flex:2" onclick="toast('Buyurtma qabul qilindi ✓','ok')">✓ Qabul qilish</button>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ ADMIN ══════════════ -->
+  <div class="screen" id="s-admin">
+    <div class="topbar">
+      <button class="tbk" onclick="go('s-home')">←</button>
+      <div class="tb-title">Admin Panel</div>
+    </div>
+    <div class="scroll">
+      <div class="admin-hero anim">
+        <div class="ah-top">
+          <div class="ah-logo">🏢</div>
+          <div>
+            <div class="ah-name">Bek Potolok LLC</div>
+            <div class="ah-plan"><div class="ah-plan-dot"></div>Free Admin Reja</div>
+          </div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-v">42</div><div class="kpi-l">Buyurtma</div></div>
+          <div class="kpi"><div class="kpi-v" style="color:var(--volt)">7</div><div class="kpi-l">AI Skan</div></div>
+          <div class="kpi"><div class="kpi-v" style="color:var(--emerald)">4</div><div class="kpi-l">Katalog</div></div>
+          <div class="kpi"><div class="kpi-v" style="color:var(--gold)">12</div><div class="kpi-l">Aktiv</div></div>
+        </div>
+      </div>
+      <div class="chart-box anim anim-1">
+        <div class="chart-hd">AI ishlatilishi <span>7 / 10 bu oy</span></div>
+        <div class="bars">
+          <div class="bar-w"><div class="bar" style="height:20%"></div><div class="bar-l">H1</div></div>
+          <div class="bar-w"><div class="bar" style="height:55%"></div><div class="bar-l">H2</div></div>
+          <div class="bar-w"><div class="bar" style="height:85%"></div><div class="bar-l">H3</div></div>
+          <div class="bar-w"><div class="bar" style="height:35%"></div><div class="bar-l">H4</div></div>
+          <div class="bar-w"><div class="bar" style="height:10%"></div><div class="bar-l">H5</div></div>
+        </div>
+      </div>
+      <div class="sec anim anim-2"><span class="sec-title">Boshqaruv</span></div>
+      <div class="menu-row anim anim-2" onclick="go('s-catalog')">
+        <div class="mr-icon ic-volt">📦</div>
+        <div class="mr-text"><div class="mr-t">Katalog boshqaruvi</div><div class="mr-s">4 ta element · 6 joy qoldi</div></div>
+        <div class="mr-r">›</div>
+      </div>
+      <div class="menu-row anim anim-3">
+        <div class="mr-icon ic-gold">📋</div>
+        <div class="mr-text"><div class="mr-t">Buyurtmalar</div><div class="mr-s">3 ta yangi buyurtma</div></div>
+        <div class="mr-badge">3</div>
+        <div class="mr-r">›</div>
+      </div>
+      <div class="menu-row anim anim-4" onclick="go('s-sub')">
+        <div class="mr-icon ic-green">💎</div>
+        <div class="mr-text"><div class="mr-t">Obuna</div><div class="mr-s">Free Reja · Upgrade mumkin</div></div>
+        <div class="mr-r">›</div>
+      </div>
+      <div class="menu-row anim anim-5">
+        <div class="mr-icon ic-sky">📊</div>
+        <div class="mr-text"><div class="mr-t">Statistika</div><div class="mr-s">Daromad va foydalanish</div></div>
+        <div class="mr-r">›</div>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+    <div class="navbar">
+      <button class="nav-btn" onclick="navTo(0,'s-home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Asosiy</span>
+      </button>
+      <button class="nav-btn" onclick="navTo(1,'s-upload')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <span>Yangi</span>
+      </button>
+      <button class="nav-btn on" onclick="navTo(2,'s-admin')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4361ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Admin</span>
+      </button>
+      <button class="nav-btn" onclick="navTo(3,'s-super')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Super</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════ CATALOG (Telegram kanal uslubi) ══════════════ -->
+  <div class="screen" id="s-catalog">
+    <div class="topbar">
+      <button class="tbk" onclick="go('s-admin')">←</button>
+      <div class="tb-title">Katalog</div>
+      <button class="tb-action" onclick="toast('Telegram kanal yangilanmoqda...','info');setTimeout(()=>{toast('Yangilandi ✓','ok')},1400)">🔄 Yangilash</button>
+    </div>
+
+    <!-- Telegram ulanish banner -->
+    <div id="tg-banner" style="margin:12px 18px 8px;padding:12px 14px;background:rgba(42,171,238,0.08);border:1px solid rgba(42,171,238,0.25);border-radius:12px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="openM('m-tg-settings')">
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2AABEE,#229ED9);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">✈️</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:var(--t1)">Telegram kanal ulangan</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:2px" id="tg-status-txt">@mening_kanalim · 48 ta rasm</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--emerald);box-shadow:0 0 8px rgba(46,204,113,0.5)"></div>
+        <span style="font-size:18px;color:var(--t3)">⚙️</span>
+      </div>
+    </div>
+
+    <!-- Kategoriya filtri -->
+    <div class="cat-scroll" style="padding:0 18px 12px">
+      <button class="cpill on" onclick="filterCat(this,'all')">Barchasi</button>
+      <button class="cpill" onclick="filterCat(this,'osmon')">☁️ Osmon</button>
+      <button class="cpill" onclick="filterCat(this,'3d-gul')">🌸 3D Gullar</button>
+      <button class="cpill" onclick="filterCat(this,'naqsh')">🔷 Naqshlar</button>
+      <button class="cpill" onclick="filterCat(this,'abstrak')">✨ Abstrakt</button>
+      <button class="cpill" onclick="filterCat(this,'klassik')">🏛️ Klassik</button>
+    </div>
+
+    <div class="scroll">
+      <!-- OSMON kategoriyasi -->
+      <div class="cat-section" data-cat="osmon">
+        <div class="cat-hd">
+          <span class="cat-hd-icon">☁️</span>
+          <span class="cat-hd-title">Osmon</span>
+          <span class="cat-hd-count">12 ta</span>
+        </div>
+        <div class="photo-grid">
+          <div class="pg-item" onclick="openPhoto('Osmon Klassik','☁️','85,000')">
+            <div class="pg-img" style="background:linear-gradient(160deg,#87CEEB,#4682B4,#1a5276)">
+              <div class="pg-emoji">☁️</div>
+            </div>
+            <div class="pg-name">Klassik Ko'k</div>
+            <div class="pg-price">85,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Osmon Quyosh','🌅','95,000')">
+            <div class="pg-img" style="background:linear-gradient(160deg,#FF7F50,#FFD700,#87CEEB)">
+              <div class="pg-emoji">🌅</div>
+            </div>
+            <div class="pg-name">Quyosh Botishi</div>
+            <div class="pg-price">95,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Osmon Tun','🌙','90,000')">
+            <div class="pg-img" style="background:linear-gradient(160deg,#0a0a2e,#1a1a5e,#4a4a9e)">
+              <div class="pg-emoji">🌙</div>
+            </div>
+            <div class="pg-name">Tungi Osmon</div>
+            <div class="pg-price">90,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Osmon Bulut','⛅','88,000')">
+            <div class="pg-img" style="background:linear-gradient(160deg,#B0C4DE,#87CEEB,#E0F0FF)">
+              <div class="pg-emoji">⛅</div>
+            </div>
+            <div class="pg-name">Oq Bulutlar</div>
+            <div class="pg-price">88,000 so'm/m²</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D GULLAR kategoriyasi -->
+      <div class="cat-section" data-cat="3d-gul">
+        <div class="cat-hd">
+          <span class="cat-hd-icon">🌸</span>
+          <span class="cat-hd-title">3D Gullar</span>
+          <span class="cat-hd-count">18 ta</span>
+        </div>
+        <div class="photo-grid">
+          <div class="pg-item" onclick="openPhoto('Atirgul 3D','🌹','140,000')">
+            <div class="pg-img" style="background:linear-gradient(160deg,#8B0000,#DC143C,#FFB6C1)">
+              <div class="pg-emoji">🌹</div>
+            </div>
+            <div class="pg-name">Qizil Atirgul</div>
+            <div class="pg-price">140,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Gilos 3D','🌸','135,000')">
+            <div class="pg-img" style="background:linear-gradient(160deg,#FFB7C5,#FF69B4,#C71585)">
+              <div class="pg-emoji">🌸</div>
+            </div>
+            <div class="pg-name">Gilos Guli</div>
+            <div class="pg-price">135,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Lola 3D','🌷','130,000')">
+            <div class="pg-img" style="background:linear-gradient(160deg,#FF6347,#FF4500,#FFA07A)">
+              <div class="pg-emoji">🌷</div>
+            </div>
+            <div class="pg-name">Lola</div>
+            <div class="pg-price">130,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Lavanda 3D','💜','145,000')">
+            <div class="pg-img" style="background:linear-gradient(160deg,#4B0082,#8B008B,#DDA0DD)">
+              <div class="pg-emoji">💜</div>
+            </div>
+            <div class="pg-name">Lavanda</div>
+            <div class="pg-price">145,000 so'm/m²</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAQSHLAR kategoriyasi -->
+      <div class="cat-section" data-cat="naqsh">
+        <div class="cat-hd">
+          <span class="cat-hd-icon">🔷</span>
+          <span class="cat-hd-title">Naqshlar</span>
+          <span class="cat-hd-count">10 ta</span>
+        </div>
+        <div class="photo-grid">
+          <div class="pg-item" onclick="openPhoto('Geometrik','🔷','110,000')">
+            <div class="pg-img" style="background:repeating-linear-gradient(45deg,#1a1a3e,#1a1a3e 10px,#2a2a5e 10px,#2a2a5e 20px)">
+              <div class="pg-emoji">🔷</div>
+            </div>
+            <div class="pg-name">Geometrik</div>
+            <div class="pg-price">110,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Marmor','🪨','160,000')">
+            <div class="pg-img" style="background:linear-gradient(135deg,#f5f5f0,#e8e0d8,#c8b8a8)">
+              <div class="pg-emoji">🪨</div>
+            </div>
+            <div class="pg-name">Marmor</div>
+            <div class="pg-price">160,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Shaxmat','♟️','105,000')">
+            <div class="pg-img" style="background:repeating-conic-gradient(#1a1a2e 0% 25%, #4a4a7e 0% 50%) 0 0/40px 40px">
+              <div class="pg-emoji">♟️</div>
+            </div>
+            <div class="pg-name">Shaxmat</div>
+            <div class="pg-price">105,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('To\'lqin','〰️','115,000')">
+            <div class="pg-img" style="background:linear-gradient(160deg,#0f3460,#16213e,#1a1a2e)">
+              <div class="pg-emoji">〰️</div>
+            </div>
+            <div class="pg-name">To'lqin</div>
+            <div class="pg-price">115,000 so'm/m²</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABSTRAKT -->
+      <div class="cat-section" data-cat="abstrak">
+        <div class="cat-hd">
+          <span class="cat-hd-icon">✨</span>
+          <span class="cat-hd-title">Abstrakt</span>
+          <span class="cat-hd-count">8 ta</span>
+        </div>
+        <div class="photo-grid">
+          <div class="pg-item" onclick="openPhoto('Galaktika','🌌','180,000')">
+            <div class="pg-img" style="background:radial-gradient(ellipse at 30% 40%,#4a0e8f,#0d0d2e),radial-gradient(ellipse at 70% 60%,#1a0a3e,transparent)">
+              <div class="pg-emoji">🌌</div>
+            </div>
+            <div class="pg-name">Galaktika</div>
+            <div class="pg-price">180,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Aurora','🌈','175,000')">
+            <div class="pg-img" style="background:linear-gradient(160deg,#0a2a1a,#1a5a3a,#2ecc71,#48cae4)">
+              <div class="pg-emoji">🌈</div>
+            </div>
+            <div class="pg-name">Aurora</div>
+            <div class="pg-price">175,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Portlash','💥','165,000')">
+            <div class="pg-img" style="background:radial-gradient(circle,#FFD700,#FF4500,#8B0000)">
+              <div class="pg-emoji">💥</div>
+            </div>
+            <div class="pg-name">Portlash</div>
+            <div class="pg-price">165,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Nebula','🔮','190,000')">
+            <div class="pg-img" style="background:radial-gradient(ellipse,#6a0dad,#1a0050,#000)">
+              <div class="pg-emoji">🔮</div>
+            </div>
+            <div class="pg-name">Nebula</div>
+            <div class="pg-price">190,000 so'm/m²</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KLASSIK -->
+      <div class="cat-section" data-cat="klassik">
+        <div class="cat-hd">
+          <span class="cat-hd-icon">🏛️</span>
+          <span class="cat-hd-title">Klassik</span>
+          <span class="cat-hd-count">8 ta</span>
+        </div>
+        <div class="photo-grid">
+          <div class="pg-item" onclick="openPhoto('Oq Satin','⚪','120,000')">
+            <div class="pg-img" style="background:linear-gradient(135deg,#f8f8f8,#e8e8e8,#d8d8d8)">
+              <div class="pg-emoji">⚪</div>
+            </div>
+            <div class="pg-name">Oq Satin</div>
+            <div class="pg-price">120,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Champagne','🥂','125,000')">
+            <div class="pg-img" style="background:linear-gradient(135deg,#f5e6c8,#e8d5a0,#c8a870)">
+              <div class="pg-emoji">🥂</div>
+            </div>
+            <div class="pg-name">Champagne</div>
+            <div class="pg-price">125,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Oltin','🏆','150,000')">
+            <div class="pg-img" style="background:linear-gradient(135deg,#b8860b,#DAA520,#FFD700)">
+              <div class="pg-emoji">🏆</div>
+            </div>
+            <div class="pg-name">Oltin</div>
+            <div class="pg-price">150,000 so'm/m²</div>
+          </div>
+          <div class="pg-item" onclick="openPhoto('Qora Matte','⬛','130,000')">
+            <div class="pg-img" style="background:linear-gradient(135deg,#0a0a0a,#1a1a1a,#2a2a2a)">
+              <div class="pg-emoji">⬛</div>
+            </div>
+            <div class="pg-name">Qora Matte</div>
+            <div class="pg-price">130,000 so'm/m²</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:24px"></div>
+    </div>
+  </div>
+
+  <!-- PHOTO DETAIL MODAL -->
+  <div class="backdrop" id="m-photo" onclick="closeM('m-photo')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="handle"></div>
+      <div id="ph-img" style="width:100%;height:180px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:72px;margin-bottom:16px;background:linear-gradient(135deg,#1a1a3e,#2a2a5e)"></div>
+      <div id="ph-name" style="font-size:20px;font-weight:800;color:var(--t1);margin-bottom:4px"></div>
+      <div id="ph-price" style="font-size:15px;font-weight:700;color:var(--volt);margin-bottom:20px"></div>
+      <button class="btn btn-volt" onclick="closeM('m-photo');go('s-upload');toast('Ushbu material tanlandi ✓','ok')">✓ Shu materialdan foydalanish</button>
+      <button class="btn btn-ghost" style="margin-top:8px" onclick="closeM('m-photo')">Yopish</button>
+    </div>
+  </div>
+
+  <!-- ══════════════ SUPER ADMIN ══════════════ -->
+  <div class="screen" id="s-super">
+    <div class="topbar">
+      <button class="tbk" onclick="go('s-home')">←</button>
+      <div class="tb-title">Super Admin</div>
+    </div>
+    <div class="scroll">
+      <div class="sa-banner anim">
+        <div class="sa-icon">👑</div>
+        <div class="sa-title">Tizim boshqaruvi</div>
+        <div class="sa-sub">Super Admin · To'liq kirish huquqi</div>
+        <div class="sa-grid">
+          <div class="sa-kpi"><div class="sa-kpi-v">24</div><div class="sa-kpi-l">Admin</div></div>
+          <div class="sa-kpi"><div class="sa-kpi-v">318</div><div class="sa-kpi-l">Foydalanuvchi</div></div>
+          <div class="sa-kpi"><div class="sa-kpi-v">1,204</div><div class="sa-kpi-l">Buyurtma</div></div>
+          <div class="sa-kpi"><div class="sa-kpi-v">847</div><div class="sa-kpi-l">AI Skan</div></div>
+          <div class="sa-kpi" style="background:rgba(231,76,60,.12);border-color:rgba(231,76,60,.2)"><div class="sa-kpi-v" style="color:#ff8888">3</div><div class="sa-kpi-l">Kutilmoqda</div></div>
+          <div class="sa-kpi"><div class="sa-kpi-v" style="color:#7b9eff">5.2M</div><div class="sa-kpi-l">Daromad</div></div>
+        </div>
+      </div>
+      <div class="sec anim anim-1"><span class="sec-title">Kutilayotgan to'lovlar</span></div>
+      <div class="pay-card anim anim-1">
+        <div class="pc-top">
+          <div><div class="pc-co">Bek Potolok LLC</div><div class="pc-plan">Pro Reja · 1 oy</div></div>
+          <div><div class="pc-amt">199,000 so'm</div><div class="pc-date">2024-12-28 · 14:32</div></div>
+        </div>
+        <div class="pc-receipt">📎 click_to'lov_kvitansiya.jpg</div>
+        <div class="pc-btns">
+          <button class="pc-rej" onclick="toast('To'lov rad etildi','err')">✕ Rad etish</button>
+          <button class="pc-ok" onclick="toast('Obuna faollashtirildi ✓','ok')">✓ Tasdiqlash va faollashtirish</button>
+        </div>
+      </div>
+      <div class="pay-card anim anim-2">
+        <div class="pc-top">
+          <div><div class="pc-co">Toshkent Ceiling Co.</div><div class="pc-plan">Basic Reja · 3 oy</div></div>
+          <div><div class="pc-amt">297,000 so'm</div><div class="pc-date">2024-12-27 · 09:15</div></div>
+        </div>
+        <div class="pc-receipt">📎 payme_kvitansiya_2024.png</div>
+        <div class="pc-btns">
+          <button class="pc-rej" onclick="toast('To'lov rad etildi','err')">✕ Rad etish</button>
+          <button class="pc-ok" onclick="toast('Obuna faollashtirildi ✓','ok')">✓ Tasdiqlash va faollashtirish</button>
+        </div>
+      </div>
+      <div class="sec anim anim-3"><span class="sec-title">Admin akkauntlari</span></div>
+      <div class="ali anim anim-3">
+        <div class="ali-av">B</div>
+        <div class="ali-info"><div class="ali-name">Bek Potolok LLC</div><div class="ali-meta">42 buyurtma · 7 AI skan bu oy</div></div>
+        <span class="plan-tag pt-free">Free</span>
+      </div>
+      <div class="ali anim anim-4">
+        <div class="ali-av" style="background:linear-gradient(135deg,#1a3a7c,#2d5a9c)">P</div>
+        <div class="ali-info"><div class="ali-name">Premium Ceiling Co.</div><div class="ali-meta">128 buyurtma · 45 AI skan</div></div>
+        <span class="plan-tag pt-pro">Pro</span>
+      </div>
+      <div class="ali anim anim-5">
+        <div class="ali-av" style="background:linear-gradient(135deg,#1a6a3a,#2d9a5a)">S</div>
+        <div class="ali-info"><div class="ali-name">Samarqand Install</div><div class="ali-meta">67 buyurtma · 28 AI skan</div></div>
+        <span class="plan-tag pt-basic">Basic</span>
+      </div>
+      <div class="sec anim" style="margin-top:8px"><span class="sec-title">Tezkor amallar</span></div>
+      <div class="menu-row anim" onclick="toast('Rejalar muharririga kirilmoqda...','info')">
+        <div class="mr-icon ic-gold">💳</div>
+        <div class="mr-text"><div class="mr-t">Rejalarni boshqarish</div><div class="mr-s">Limit va narxlarni tahrirlash</div></div>
+        <div class="mr-r">›</div>
+      </div>
+      <div class="menu-row anim" onclick="toast('AI kredit qo'shildi ✓','ok')">
+        <div class="mr-icon ic-volt">🤖</div>
+        <div class="mr-text"><div class="mr-t">AI kredit qo'shish</div><div class="mr-s">Admin uchun qo'lda to'ldirish</div></div>
+        <div class="mr-r">›</div>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+    <div class="navbar">
+      <button class="nav-btn" onclick="navTo(0,'s-home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Asosiy</span>
+      </button>
+      <button class="nav-btn" onclick="navTo(1,'s-upload')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <span>Yangi</span>
+      </button>
+      <button class="nav-btn" onclick="navTo(2,'s-admin')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Admin</span>
+      </button>
+      <button class="nav-btn on" onclick="navTo(3,'s-super')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4361ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Super</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════ SUBSCRIPTION ══════════════ -->
+  <div class="screen" id="s-sub">
+    <div class="topbar">
+      <button class="tbk" onclick="goBack()">←</button>
+      <div class="tb-title">Obuna rejalari</div>
+    </div>
+    <div class="scroll">
+      <div class="cur-plan-card anim">
+        <div class="cp-lbl">Joriy reja</div>
+        <div class="cp-name">Free Admin</div>
+        <div class="cp-exp">Muddatsiz · Doimiy bepul</div>
+        <div class="cp-limits">
+          <div class="cpl"><div class="cpl-v">7/10</div><div class="cpl-l">AI Skan</div></div>
+          <div class="cpl"><div class="cpl-v">4/10</div><div class="cpl-l">Katalog</div></div>
+          <div class="cpl"><div class="cpl-v">12/20</div><div class="cpl-l">Buyurtma</div></div>
+        </div>
+      </div>
+      <div class="sec anim anim-1"><span class="sec-title">Barcha rejalar</span></div>
+
+      <div class="plan-card cur anim anim-1">
+        <div class="ph">
+          <div class="p-name">Free</div>
+          <div><span class="p-price" style="color:var(--t3)">0</span> <span class="p-per">so'm/oy</span></div>
+        </div>
+        <div class="feats">
+          <span class="feat">10 AI skan</span>
+          <span class="feat">10 katalog</span>
+          <span class="feat">20 buyurtma</span>
+          <span class="feat">Watermark</span>
+        </div>
+        <button class="p-btn dis">✓ Joriy reja</button>
+      </div>
+
+      <div class="plan-card anim anim-2">
+        <div class="ph">
+          <div class="p-name">Basic</div>
+          <div><span class="p-price">99,000</span> <span class="p-per">so'm/oy</span></div>
+        </div>
+        <div class="feats">
+          <span class="feat">50 AI skan</span>
+          <span class="feat">50 katalog</span>
+          <span class="feat">100 buyurtma</span>
+          <span class="feat">Watermark</span>
+        </div>
+        <button class="p-btn" onclick="openM('m-pay');setPlan('Basic','99,000')">Basic ni tanlash</button>
+      </div>
+
+      <div class="plan-card pop anim anim-3">
+        <div class="plan-pop-lbl">⭐ Eng mashhur</div>
+        <div class="ph">
+          <div class="p-name">Pro</div>
+          <div><span class="p-price" style="color:var(--sky)">199,000</span> <span class="p-per">so'm/oy</span></div>
+        </div>
+        <div class="feats">
+          <span class="feat">300 AI skan</span>
+          <span class="feat">300 katalog</span>
+          <span class="feat">500 buyurtma</span>
+          <span class="feat good">Watermark yo'q</span>
+          <span class="feat good">O'z logotipi</span>
+          <span class="feat">3 admin</span>
+        </div>
+        <button class="p-btn" style="background:linear-gradient(135deg,#0a3a6a,var(--sky));box-shadow:0 6px 16px rgba(72,202,228,.2)" onclick="openM('m-pay');setPlan('Pro','199,000')">Pro ni tanlash</button>
+      </div>
+
+      <div class="plan-card anim anim-4">
+        <div class="ph">
+          <div class="p-name">Business</div>
+          <div><span class="p-price" style="color:var(--gold)">499,000</span> <span class="p-per">so'm/oy</span></div>
+        </div>
+        <div class="feats">
+          <span class="feat">1000 AI skan</span>
+          <span class="feat good">Cheksiz katalog</span>
+          <span class="feat good">Cheksiz buyurtma</span>
+          <span class="feat good">Watermark yo'q</span>
+          <span class="feat good">O'z logotipi</span>
+          <span class="feat">10 admin</span>
+        </div>
+        <button class="p-btn" style="background:linear-gradient(135deg,#7a5500,var(--gold));color:#0a0a0a;box-shadow:0 6px 16px var(--gold-glow)" onclick="openM('m-pay');setPlan('Business','499,000')">Business ni tanlash</button>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TELEGRAM SOZLAMALARI ══════════════ -->
+  <div class="backdrop" id="m-tg-settings" onclick="closeM('m-tg-settings')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="handle"></div>
+      <div class="sh-title">✈️ Telegram Sozlamalari</div>
+      <div class="sh-sub">Katalog rasmlar manbasini ulang</div>
+
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Bot Token</div>
+        <div style="background:var(--ink4);border:1px solid var(--line2);border-radius:10px;padding:12px 14px;font-family:monospace;font-size:13px;color:var(--volt);display:flex;justify-content:space-between;align-items:center">
+          <span id="tg-token-display">7123456789:AAF••••••••••••</span>
+          <button class="copy-btn" onclick="toast('Token nusxalandi ✓','ok')">Nusxa</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Kanal Username</div>
+        <input id="tg-channel-input" type="text" placeholder="@mening_kanalim"
+          style="width:100%;background:var(--ink4);border:1px solid var(--line2);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--t1);font-family:var(--sans);outline:none"
+          value="@mening_kanalim"
+          onfocus="this.style.borderColor='var(--volt)'"
+          onblur="this.style.borderColor='var(--line2)'">
+      </div>
+
+      <div style="background:var(--ink3);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+          <span style="color:var(--t3)">Holat</span><span style="color:var(--emerald);font-weight:700">● Ulangan</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+          <span style="color:var(--t3)">Rasmlar soni</span><span style="color:var(--t1);font-weight:700">48 ta</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0">
+          <span style="color:var(--t3)">So'nggi yangilanish</span><span style="color:var(--t1);font-weight:700">5 daqiqa oldin</span>
+        </div>
+      </div>
+
+      <button class="btn btn-volt" onclick="saveTgSettings()">💾 Saqlash</button>
+      <button class="btn btn-ghost" style="margin-top:8px" onclick="syncTelegram()">🔄 Hozir yangilash</button>
+      <button class="btn btn-ghost" style="margin-top:8px;color:var(--t3)" onclick="closeM('m-tg-settings')">Yopish</button>
+    </div>
+  </div>
+
+  <!-- ══════════════ SAVE MODAL (o'rniga) ══════════════ -->
+  <div class="backdrop" id="m-order" onclick="closeM('m-order')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="handle"></div>
+      <div class="sh-title">💾 Natijani saqlash</div>
+      <div class="sh-sub">Dizayn xulosasini telefonga yuklab oling</div>
+      <div class="order-summary">
+        <div class="os-row"><span class="os-l">Material</span><span class="os-v">Standard Glossy</span></div>
+        <div class="os-row"><span class="os-l">Yoritish</span><span class="os-v">Track Light 3-boshli</span></div>
+        <div class="os-row"><span class="os-l">Maydon taxmini</span><span class="os-v">28 m²</span></div>
+        <div class="os-row"><span class="os-l">Jami taxmin</span><span class="os-v big">2,560,000 so'm</span></div>
+      </div>
+      <button class="btn btn-volt" onclick="savePDF()">📄 PDF sifatida saqlash</button>
+      <button class="btn btn-ghost" style="margin-top:8px" onclick="savePNG()">🖼️ Rasm (PNG) saqlash</button>
+      <button class="btn btn-ghost" style="margin-top:8px;color:var(--t3)" onclick="closeM('m-order')">Yopish</button>
+    </div>
+  </div>
+
+  <!-- ══════════════ PAYMENT MODAL ══════════════ -->
+  <div class="backdrop" id="m-pay" onclick="closeM('m-pay')">
+    <div class="sheet" onclick="e=>e.stopPropagation()">
+      <div class="handle"></div>
+      <div class="sh-title" id="pay-title">Pro rejaga o'tish</div>
+      <div class="sh-sub" id="pay-sub">199,000 so'm / oy</div>
+      <div class="pay-steps">
+        <div class="ps"><div class="ps-n">1</div><div>Quyidagi kartaga pul o'tkazing</div></div>
+        <div class="card-num">
+          8600 1234 5678 9012
+          <button class="copy-btn" onclick="toast('Nusxa olindi ✓','ok')">Nusxa</button>
+        </div>
+        <div class="ps"><div class="ps-n">2</div><div>Kvitansiyaning skrinshot oling</div></div>
+        <div class="ps"><div class="ps-n">3</div><div>Quyida yuklang — Super Admin 24 soat ichida faollashtiradi</div></div>
+      </div>
+      <button class="btn btn-volt" onclick="uploadRec()">📎 Kvitansiya yuklash</button>
+      <button class="btn btn-ghost" style="margin-top:8px" onclick="closeM('m-pay')">Bekor qilish</button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="tst"></div>
+</div>
+
+<script>
+// ── TELEGRAM MINI APP INIT ──
+const tg = window.Telegram?.WebApp;
+if(tg){
+  tg.ready();
+  tg.expand();
+  tg.setHeaderColor('#080810');
+  tg.setBackgroundColor('#080810');
+}
+
+// STATE
+let prev='s-home', cur='s-home', uploaded=false;
+let V=[], drag=-1, cvs2, ctx2;
+
+// CLOCK
+function tick(){
+  const n=new Date();
+  const h=n.getHours().toString().padStart(2,'0');
+  const m=n.getMinutes().toString().padStart(2,'0');
+  const el=document.getElementById('clock');
+  if(el) el.textContent=h+':'+m;
+}
+tick(); setInterval(tick,60000);
+
+// NAV — Mini App uchun optimallashtirilgan
+function go(id){
+  prev=cur;
+  const screens=document.querySelectorAll('.screen');
+  screens.forEach(s=>{
+    s.classList.remove('on');
+    s.style.display='none';
+  });
+  const el=document.getElementById(id);
+  if(el){
+    el.style.display='flex';
+    // Force reflow before adding class (fixes Telegram WebView timing issues)
+    void el.offsetHeight;
+    el.classList.add('on');
+    const sc=el.querySelector('.scroll');
+    if(sc) sc.scrollTop=0;
+    cur=id;
+  }
+  if(id==='s-detect') startDet();
+
+  // Telegram Back Button
+  if(tg){
+    if(id==='s-home'){
+      tg.BackButton.hide();
+    } else {
+      tg.BackButton.show();
+      tg.BackButton.onClick(function(){
+        goBack();
+      });
+    }
+  }
+}
+
+function goBack(){go(prev||'s-home')}
+
+function navTo(n,id){
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>{
+    const isOn=i===n;
+    b.classList.toggle('on',isOn);
+    const svgEl=b.querySelector('svg');
+    if(svgEl)svgEl.setAttribute('stroke',isOn?'#4361ee':'#50507a');
+  });
+  go(id);
+}
+
+// UPLOAD
+function doUpload(){
+  const z=document.getElementById('dropZone');
+  z.classList.add('lit');
+  z.innerHTML='<div class="ring" style="width:36px;height:36px;margin:0"></div><div style="font-size:13px;color:var(--t2);margin-top:10px">Yuklanmoqda...</div>';
+  setTimeout(()=>{
+    document.getElementById('drop-area').style.display='none';
+    document.getElementById('prev-area').style.display='block';
+    const ab=document.getElementById('analyzeBtn');
+    ab.removeAttribute('disabled');
+    uploaded=true;
+    toast('Rasm muvaffaqiyatli yuklandi ✓','ok');
+  },1400);
+}
+
+function rmPhoto(){
+  document.getElementById('drop-area').style.display='block';
+  document.getElementById('prev-area').style.display='none';
+  const z=document.getElementById('dropZone');
+  z.classList.remove('lit');
+  z.innerHTML=`<div class="ud-ring">📷</div>
+    <div class="ud-h">Rasm tanlash</div>
+    <div class="ud-s">Xona rasmini oling yoki<br>galereyadan tanlang</div>
+    <div class="ud-tag">JPG · PNG · HEIC · max 10 MB</div>`;
+  z.onclick=doUpload;
+  document.getElementById('analyzeBtn').setAttribute('disabled','');
+  uploaded=false;
+}
+
+// AI DETECTION
+function startDet(){
+  document.getElementById('load-area').style.display='block';
+  document.getElementById('cvs-area').style.display='none';
+  setTimeout(()=>{
+    document.getElementById('load-area').style.display='none';
+    document.getElementById('cvs-area').style.display='block';
+    initCvs();
+  },2200);
+}
+
+function initCvs(){
+  cvs2=document.getElementById('cvs');
+  if(!cvs2)return;
+  const room=document.getElementById('cvs-room');
+  const W=room.offsetWidth, H=room.offsetHeight||255;
+  cvs2.width=W; cvs2.height=H;
+  ctx2=cvs2.getContext('2d');
+  V=[
+    {x:W*.07,y:H*.10},{x:W*.93,y:H*.08},
+    {x:W*.95,y:H*.84},{x:W*.05,y:H*.86}
+  ];
+  drawCvs();
+  cvs2.addEventListener('mousedown',onMD);
+  cvs2.addEventListener('mousemove',onMM);
+  cvs2.addEventListener('mouseup',()=>{drag=-1;drawCvs()});
+  cvs2.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];onMD({clientX:t.clientX,clientY:t.clientY})},{passive:false});
+  cvs2.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0];onMM({clientX:t.clientX,clientY:t.clientY})},{passive:false});
+  cvs2.addEventListener('touchend',()=>{drag=-1;drawCvs()});
+}
+
+function drawCvs(){
+  if(!ctx2||V.length<3)return;
+  ctx2.clearRect(0,0,cvs2.width,cvs2.height);
+  ctx2.beginPath();
+  ctx2.moveTo(V[0].x,V[0].y);
+  V.slice(1).forEach(v=>ctx2.lineTo(v.x,v.y));
+  ctx2.closePath();
+  ctx2.fillStyle='rgba(67,97,238,0.14)';ctx2.fill();
+  ctx2.strokeStyle='rgba(99,130,255,0.9)';ctx2.lineWidth=2;ctx2.stroke();
+  V.forEach((v,i)=>{
+    ctx2.beginPath();ctx2.arc(v.x,v.y,11,0,Math.PI*2);
+    ctx2.fillStyle=i===drag?'#ffd740':'rgba(244,208,63,0.95)';ctx2.fill();
+    ctx2.strokeStyle='rgba(255,255,255,0.8)';ctx2.lineWidth=2;ctx2.stroke();
+  });
+}
+
+function getP(e){
+  const r=cvs2.getBoundingClientRect();
+  return{x:(e.clientX-r.left)*(cvs2.width/r.width),y:(e.clientY-r.top)*(cvs2.height/r.height)};
+}
+function onMD(e){const p=getP(e);drag=V.findIndex(v=>Math.hypot(v.x-p.x,v.y-p.y)<18)}
+function onMM(e){if(drag<0)return;V[drag]=getP(e);drawCvs()}
+function resetCvs(){initCvs();toast('Kontour asl holatga qaytarildi','info')}
+function reScan(){
+  document.getElementById('load-area').style.display='block';
+  document.getElementById('cvs-area').style.display='none';
+  setTimeout(()=>{
+    document.getElementById('load-area').style.display='none';
+    document.getElementById('cvs-area').style.display='block';
+    initCvs();toast('Qayta aniqlash bajarildi ✓','ok');
+  },1800);
+}
+
+// CATALOG FILTER
+function filterCat(el, cat){
+  el.closest('.cat-scroll').querySelectorAll('.cpill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.cat-section').forEach(s=>{
+    s.style.display = (cat==='all' || s.dataset.cat===cat) ? 'block' : 'none';
+  });
+}
+
+function openPhoto(name, emoji, price){
+  document.getElementById('ph-img').textContent = emoji;
+  document.getElementById('ph-name').textContent = name;
+  document.getElementById('ph-price').textContent = price + ' so\'m/m²';
+  openM('m-photo');
+}
+
+
+function setMat(m){
+  document.getElementById('seg-solid').classList.toggle('on',m==='solid');
+  document.getElementById('seg-foto').classList.toggle('on',m==='foto');
+  document.getElementById('solid-panel').style.display=m==='solid'?'block':'none';
+  document.getElementById('foto-panel').style.display=m==='foto'?'block':'none';
+}
+function selSwatch(el){
+  el.closest('.swatch-row').querySelectorAll('.sw').forEach(s=>s.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function selMCard(el){
+  el.closest('.mat-grid').querySelectorAll('.mcard').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// LIGHTING
+function togLight(el){el.classList.toggle('sel')}
+function selCat(el){
+  el.closest('.cat-scroll').querySelectorAll('.cpill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// MODALS
+function openM(id){document.getElementById(id).classList.add('open')}
+function closeM(id){document.getElementById(id).classList.remove('open')}
+
+let payN='',payP='';
+function setPlan(n,p){payN=n;payP=p;
+  document.getElementById('pay-title').textContent=n+' rejaga o\'tish';
+  document.getElementById('pay-sub').textContent=p+' so\'m / oy';
+}
+function savePDF(){
+  closeM('m-order');
+  const date = new Date().toLocaleDateString('uz-UZ');
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <style>body{font-family:Arial,sans-serif;background:#fff;color:#111;padding:32px;max-width:500px;margin:0 auto}
+  h1{font-size:22px;color:#4361ee;border-bottom:2px solid #4361ee;padding-bottom:10px;margin-bottom:20px}
+  .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;font-size:14px}
+  .label{color:#666}.value{font-weight:700;color:#111}
+  .total{display:flex;justify-content:space-between;padding:16px 0;margin-top:8px;font-size:18px;font-weight:900;color:#4361ee}
+  .footer{margin-top:32px;font-size:11px;color:#aaa;text-align:center}</style></head><body>
+  <h1>🏠 Shift Pro Lite — Dizayn Xulosasi</h1>
+  <div class="row"><span class="label">Sana</span><span class="value">${date}</span></div>
+  <div class="row"><span class="label">Material</span><span class="value">Standard Glossy</span></div>
+  <div class="row"><span class="label">Tur</span><span class="value">Odnotonli</span></div>
+  <div class="row"><span class="label">Yoritish</span><span class="value">Track Light 3-boshli</span></div>
+  <div class="row"><span class="label">Taxminiy maydon</span><span class="value">28 m²</span></div>
+  <div class="row"><span class="label">Material narxi</span><span class="value">2,380,000 so'm</span></div>
+  <div class="row"><span class="label">Yoritish narxi</span><span class="value">180,000 so'm</span></div>
+  <div class="total"><span>Jami taxmin</span><span>2,560,000 so'm</span></div>
+  <div class="footer">Shift Pro Lite tomonidan yaratildi · ${date}</div>
+  </body></html>`;
+  const blob = new Blob([html], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'dizayn-xulosa.html';
+  a.click();
+  toast('Xulosa yuklab olindi ✓','ok');
+}
+
+function savePNG(){
+  closeM('m-order');
+  const cvs = document.createElement('canvas');
+  cvs.width = 700; cvs.height = 510;
+  const cx = cvs.getContext('2d');
+  cx.fillStyle = '#080810'; cx.fillRect(0,0,700,510);
+  const grad = cx.createLinearGradient(0,0,700,0);
+  grad.addColorStop(0,'#3a0ca3'); grad.addColorStop(1,'#4361ee');
+  cx.fillStyle = grad; cx.fillRect(0,0,700,70);
+  cx.fillStyle = '#fff'; cx.font = 'bold 20px Arial';
+  cx.fillText('Shift Pro Lite — Dizayn Xulosasi', 28, 44);
+  cx.font = '13px Arial'; cx.fillStyle = 'rgba(255,255,255,0.7)';
+  cx.fillText(new Date().toLocaleDateString('uz-UZ'), 580, 44);
+  const rows = [
+    ['Material','Standard Glossy'],
+    ['Tur','Odnotonli'],
+    ['Yoritish','Track Light 3-boshli'],
+    ['Taxminiy maydon','28 m²'],
+    ['Material narxi','2,380,000 so\'m'],
+    ['Yoritish narxi','180,000 so\'m'],
+  ];
+  rows.forEach((r,i)=>{
+    const y = 118 + i*52;
+    cx.fillStyle = i%2===0?'#0e0e1a':'#141422';
+    cx.fillRect(24,y-24,652,48);
+    cx.fillStyle='#9090b8'; cx.font='14px Arial'; cx.fillText(r[0],40,y+6);
+    cx.fillStyle='#f0f0ff'; cx.font='bold 14px Arial'; cx.fillText(r[1],420,y+6);
+  });
+  cx.fillStyle='#1c1c2e'; cx.fillRect(24,442,652,50);
+  cx.strokeStyle='#4361ee'; cx.lineWidth=1.5; cx.strokeRect(24,442,652,50);
+  cx.fillStyle='#9090b8'; cx.font='bold 16px Arial'; cx.fillText('Jami taxmin',40,472);
+  cx.fillStyle='#4361ee'; cx.font='bold 20px Arial'; cx.fillText("2,560,000 so'm",420,472);
+  cx.fillStyle='#50507a'; cx.font='11px Arial'; cx.fillText('Shift Pro Lite tomonidan yaratildi',240,502);
+  const a = document.createElement('a');
+  a.href = cvs.toDataURL('image/png');
+  a.download = 'dizayn-xulosa.png';
+  a.click();
+  toast('Rasm saqlandi ✓','ok');
+}
+function saveTgSettings(){
+  const ch = document.getElementById('tg-channel-input').value.trim();
+  if(ch){
+    document.getElementById('tg-status-txt').textContent = ch + ' · 48 ta rasm';
+    toast('Sozlamalar saqlandi ✓','ok');
+    closeM('m-tg-settings');
+  } else {
+    toast('Kanal username kiriting','err');
+  }
+}
+
+function syncTelegram(){
+  closeM('m-tg-settings');
+  toast('Telegram kanal yangilanmoqda...','info');
+  setTimeout(()=>{
+    toast('Yangilandi ✓ — 48 ta rasm topildi','ok');
+  },1600);
+}
+
+function uploadRec(){closeM('m-pay');toast('Kvitansiya yuborildi · Super Admin tekshirmoqda','info')}
+
+// TOAST
+function toast(msg,type=''){
+  const t=document.getElementById('tst');
+  t.textContent=msg;t.className='toast'+(type?' '+type:'');
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// INIT
+(function(){
+  // Barcha ekranlarni yashir
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.remove('on');
+    s.style.display='none';
+  });
+  // Home ekranini ko'rsat
+  const home = document.getElementById('s-home');
+  if(home){
+    home.style.display='flex';
+    home.classList.add('on');
+  }
+
+  // Telegram WebApp haptic feedback
+  if(tg){
+    document.querySelectorAll('.btn, .nav-btn, .mcard, .litem, .ocard, .pg-item').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        tg.HapticFeedback?.impactOccurred('light');
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
