@@ -3353,6 +3353,8 @@ let gridImgOpacity = 0.92; // Rasm shaffofligi
 let gridCols = 3;          // Grid ustunlar soni
 let gridRows = 3;          // Grid qatorlar soni
 let showGrid = true;       // Grid ko'rsatish
+let imgOffsetX = 0, imgOffsetY = 0; // Rasm joylashuvi canvas ichida
+let imgDrawW = 0, imgDrawH = 0;     // Rasm o'lchami canvas ichida
 
 function initCvs(){
   cvs2 = document.getElementById('cvs');
@@ -3371,15 +3373,21 @@ function initCvs(){
     img.onload = function(){
       const containerW = room.offsetWidth;
       const naturalRatio = img.naturalHeight / img.naturalWidth;
-      let W = containerW;
-      let H = Math.round(W * naturalRatio);
 
-      // Portret rasm uchun balandlikni cheklash (ekranga moslash)
-      const maxH = Math.round(window.innerHeight * 0.34);
-      if(H > maxH){
-        H = maxH;
-        W = Math.round(H / naturalRatio);
+      // Atrofida joy qoldirish uchun rasm hajmini kichraytiramiz
+      const padding = 28; // har tomondan bo'sh joy (px)
+      let imgW = containerW - padding*2;
+      let imgH = Math.round(imgW * naturalRatio);
+
+      // Portret rasm uchun balandlikni cheklash
+      const maxImgH = Math.round(window.innerHeight * 0.34);
+      if(imgH > maxImgH){
+        imgH = maxImgH;
+        imgW = Math.round(imgH / naturalRatio);
       }
+
+      const W = imgW + padding*2;
+      const H = imgH + padding*2;
 
       cvs2.width = W;
       cvs2.height = H;
@@ -3387,11 +3395,17 @@ function initCvs(){
       room.style.width = W + 'px';
       room.style.margin = '0 auto';
 
+      // Rasm joylashuvi (markazda, atrofida padding)
+      imgOffsetX = padding;
+      imgOffsetY = padding;
+      imgDrawW = imgW;
+      imgDrawH = imgH;
+
       V = [
-        {x:W*0.05, y:H*0.06},
-        {x:W*0.95, y:H*0.06},
-        {x:W*0.95, y:H*0.90},
-        {x:W*0.05, y:H*0.90}
+        {x:imgOffsetX, y:imgOffsetY},
+        {x:imgOffsetX+imgDrawW, y:imgOffsetY},
+        {x:imgOffsetX+imgDrawW, y:imgOffsetY+imgDrawH},
+        {x:imgOffsetX, y:imgOffsetY+imgDrawH}
       ];
       drawAll();
     };
@@ -3402,11 +3416,13 @@ function initCvs(){
     cvs2.height = H;
     room.style.height = H + 'px';
     room.style.width = '100%';
+    imgOffsetX = 28; imgOffsetY = 28;
+    imgDrawW = W - 56; imgDrawH = H - 56;
     V = [
-      {x:W*0.05, y:H*0.06},
-      {x:W*0.95, y:H*0.06},
-      {x:W*0.95, y:H*0.90},
-      {x:W*0.05, y:H*0.90}
+      {x:imgOffsetX, y:imgOffsetY},
+      {x:imgOffsetX+imgDrawW, y:imgOffsetY},
+      {x:imgOffsetX+imgDrawW, y:imgOffsetY+imgDrawH},
+      {x:imgOffsetX, y:imgOffsetY+imgDrawH}
     ];
     drawAll();
   }
@@ -3426,20 +3442,21 @@ function drawAll(){
   const W = cvs2.width, H = cvs2.height;
   ctx2.clearRect(0, 0, W, H);
 
-  // 1. Asl rasmni chiz
+  // Fon — atrofdagi bo'sh joy uchun
+  ctx2.fillStyle = '#0a0a1c';
+  ctx2.fillRect(0, 0, W, H);
+
+  // 1. Asl rasmni chiz (offset va o'lcham bo'yicha, atrofida joy qoldirib)
   if(uploadedImgSrc){
     const img = new Image();
     img.onload = ()=>{
-      ctx2.drawImage(img, 0, 0, W, H);
+      ctx2.drawImage(img, imgOffsetX, imgOffsetY, imgDrawW||W, imgDrawH||H);
       drawGridInsideContour();
       drawContour();
       drawHandles();
     };
     img.src = uploadedImgSrc;
   } else {
-    // Fon rangi
-    ctx2.fillStyle = '#0e0e20';
-    ctx2.fillRect(0, 0, W, H);
     drawGridInsideContour();
     drawContour();
     drawHandles();
@@ -3663,12 +3680,11 @@ function onMM(e){
 function resetCvs(){
   gridImg = null;
   if(cvs2){
-    const W = cvs2.width, H = cvs2.height;
     V = [
-      {x:W*0.05, y:H*0.06},
-      {x:W*0.95, y:H*0.06},
-      {x:W*0.95, y:H*0.90},
-      {x:W*0.05, y:H*0.90}
+      {x:imgOffsetX, y:imgOffsetY},
+      {x:imgOffsetX+imgDrawW, y:imgOffsetY},
+      {x:imgOffsetX+imgDrawW, y:imgOffsetY+imgDrawH},
+      {x:imgOffsetX, y:imgOffsetY+imgDrawH}
     ];
     drawAll();
   }
