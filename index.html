@@ -454,12 +454,12 @@ html,body{
   background:var(--ink2);
 }
 .det-room{
-  width:100%;height:255px;
-  background:linear-gradient(155deg,#0a0a1c,#0f1428,#0a1020);
-  display:block;
+  width:100%;
+  background:#0a0a1c;
   position:relative;overflow:hidden;
+  border-radius:16px;
 }
-#cvs{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair;display:block}
+#cvs{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair}
 
 .det-ai-badge{
   position:absolute;top:12px;left:12px;
@@ -497,14 +497,74 @@ html,body{
 }
 
 .hint-pill{
-  margin:0 18px 14px;padding:9px 14px;
+  margin:0 18px 10px;padding:9px 14px;
   background:var(--gold-soft);border:1px solid rgba(244,208,63,.15);
   border-radius:50px;
   font-size:11px;font-weight:600;color:var(--gold);
   text-align:center;letter-spacing:.3px;
 }
 
+/* Grid sozlamalari */
+.grid-controls{
+  margin:0 18px 10px;padding:12px 14px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:12px;
+}
+.gc-title{font-size:11px;font-weight:700;color:var(--t3);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.gc-btns{display:flex;gap:6px;flex-wrap:wrap}
+.gc-btn{
+  padding:5px 12px;background:var(--ink4);
+  border:1px solid var(--line2);border-radius:8px;
+  font-size:12px;font-weight:600;color:var(--t2);
+  cursor:pointer;transition:.15s;
+}
+.gc-btn.active{background:rgba(67,97,238,.2);
+  border-color:rgba(67,97,238,.5);color:var(--volt)}
+.gc-btn:active{transform:scale(.95)}
+
+.grid-img-bar{
+  display:flex;gap:6px;padding:0 18px 10px;
+}
+
 .det-btns{display:flex;gap:10px;padding:0 18px 4px}
+
+/* Logo pozitsiya va o'lcham tugmalari */
+.logo-pos-btn{
+  padding:8px 6px;background:var(--ink4);
+  border:1px solid var(--line2);border-radius:8px;
+  font-size:11px;color:var(--t2);cursor:pointer;transition:.15s;
+}
+.logo-pos-btn.active{background:rgba(67,97,238,.2);
+  border-color:rgba(67,97,238,.5);color:var(--volt)}
+.logo-size-btn{
+  flex:1;padding:8px;background:var(--ink4);
+  border:1px solid var(--line2);border-radius:8px;
+  font-size:12px;color:var(--t2);cursor:pointer;transition:.15s;
+}
+.logo-size-btn.active{background:rgba(67,97,238,.2);
+  border-color:rgba(67,97,238,.5);color:var(--volt)}
+
+/* Grid katalog modal */
+.grid-catalog-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;padding:4px 0 12px;
+}
+.gc-item{
+  border-radius:10px;overflow:hidden;
+  cursor:pointer;border:2px solid transparent;
+  transition:.15s;aspect-ratio:1;
+  background:var(--ink3);
+}
+.gc-item:active{transform:scale(.96)}
+.gc-item.sel{border-color:var(--volt)}
+.gc-item img{width:100%;height:100%;object-fit:cover;display:block}
+.gc-item-label{
+  font-size:10px;color:var(--t3);
+  text-align:center;padding:3px 0;
+  white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;
+}
 
 /* LOADING RING */
 .ring{
@@ -698,6 +758,66 @@ html,body{
   display:flex;align-items:center;justify-content:center;
 }
 .prev-svg{width:84%;position:relative;z-index:1}
+.zoom-hint{
+  position:absolute;bottom:10px;left:10px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(8,8,22,.7);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;z-index:11;
+  border:1px solid rgba(255,255,255,.1);
+}
+
+/* ZOOM MODAL */
+.zoom-backdrop{
+  position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,.92);
+  display:none;align-items:center;justify-content:center;
+  touch-action:none;overflow:hidden;
+}
+.zoom-backdrop.show{display:flex}
+.zoom-content{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.zoom-stage{
+  transform-origin:center center;
+  transition:transform .1s ease-out;
+  max-width:100%;max-height:100%;
+  display:flex;align-items:center;justify-content:center;
+}
+.zoom-stage img, .zoom-stage svg{
+  max-width:90vw;max-height:80vh;
+  width:auto;height:auto;
+  border-radius:8px;
+}
+.zoom-close{
+  position:absolute;top:max(16px,env(safe-area-inset-top));right:16px;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.1);backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:#fff;z-index:1001;
+  border:1px solid rgba(255,255,255,.15);
+}
+.zoom-controls{
+  position:absolute;bottom:max(20px,env(safe-area-inset-bottom));
+  left:50%;transform:translateX(-50%);
+  display:flex;gap:10px;z-index:1001;
+}
+.zoom-ctrl-btn{
+  width:46px;height:46px;border-radius:50%;
+  background:rgba(255,255,255,.1);backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:#fff;
+  border:1px solid rgba(255,255,255,.15);
+}
+.zoom-ctrl-btn:active{background:rgba(255,255,255,.2)}
+.zoom-label{
+  position:absolute;top:max(16px,env(safe-area-inset-top));left:16px;
+  font-size:12px;color:rgba(255,255,255,.6);
+  background:rgba(255,255,255,.08);backdrop-filter:blur(10px);
+  padding:6px 14px;border-radius:20px;z-index:1001;
+}
 .prev-wm{
   position:absolute;inset:0;display:flex;
   align-items:center;justify-content:center;pointer-events:none;
@@ -800,6 +920,23 @@ html,body{
   cursor:pointer;transition:all .2s;
 }
 .menu-row:active{background:var(--ink4)}
+
+/* Til tanlash */
+.lang-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;background:var(--ink3);
+  border:1px solid var(--line);border-radius:12px;
+  cursor:pointer;transition:.2s;
+}
+.lang-item:active,.lang-item.active{
+  background:rgba(67,97,238,.1);
+  border-color:rgba(67,97,238,.4);
+}
+.lang-flag{font-size:26px;flex-shrink:0}
+.lang-info{flex:1}
+.lang-name{font-size:15px;font-weight:600;color:var(--t1)}
+.lang-native{font-size:12px;color:var(--t3);margin-top:2px}
+.lang-check{color:var(--volt);font-size:18px;font-weight:700;transition:.2s}
 .mr-icon{
   width:42px;height:42px;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
@@ -1172,34 +1309,11 @@ html,body{
       </button>
 
       <div class="sec anim anim-4">
-        <span class="sec-title">So'nggi buyurtmalar</span>
-        <span class="sec-link">Barchasi →</span>
+        <span class="sec-title">So'nggi dizaynlar</span>
+        <span class="sec-link" onclick="showAllDesigns()">Barchasi →</span>
       </div>
-      <div class="order-list anim anim-5">
-        <div class="ocard" onclick="go('s-order-detail')">
-          <div class="o-thumb">🛋️</div>
-          <div class="o-info">
-            <div class="o-name">Yashash xonasi shifti</div>
-            <div class="o-meta">Glossy White · 28 m² · 2 soat oldin</div>
-          </div>
-          <span class="o-badge b-new">Yangi</span>
-        </div>
-        <div class="ocard">
-          <div class="o-thumb">🛏️</div>
-          <div class="o-info">
-            <div class="o-name">Yotoqxona dizayni</div>
-            <div class="o-meta">Starry Sky · 18 m² · Kecha</div>
-          </div>
-          <span class="o-badge b-ok">Tayyor</span>
-        </div>
-        <div class="ocard">
-          <div class="o-thumb">🍽️</div>
-          <div class="o-info">
-            <div class="o-name">Oshxona shifti</div>
-            <div class="o-meta">Matte Black · 14 m² · 3 kun oldin</div>
-          </div>
-          <span class="o-badge b-wait">Kutilmoqda</span>
-        </div>
+      <div class="order-list anim anim-5" id="recent-designs">
+        <!-- JS orqali yuklanadi -->
       </div>
       <div style="height:24px"></div>
     </div>
@@ -1212,13 +1326,21 @@ html,body{
         <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
         <span>Yangi</span>
       </button>
-      <button class="nav-btn" onclick="navTo(2,'s-admin')">
+      <button id="nav-admin" class="nav-btn" onclick="navTo(2,'s-admin')">
         <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         <span>Admin</span>
       </button>
-      <button class="nav-btn" onclick="navTo(3,'s-super')">
+      <button id="nav-super" class="nav-btn" onclick="navTo(3,'s-super')">
         <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         <span>Super</span>
+      </button>
+      <button id="nav-catalog" class="nav-btn" onclick="navTo(2,'s-catalog')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        <span>Katalog</span>
+      </button>
+      <button id="nav-profile" class="nav-btn" onclick="navTo(3,'s-profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Profil</span>
       </button>
     </div>
   </div>
@@ -1226,7 +1348,7 @@ html,body{
   <!-- ══════════════ UPLOAD ══════════════ -->
   <div class="screen" id="s-upload">
     <div class="topbar">
-      <button class="tbk" onclick="go('s-home')">←</button>
+      <button class="tbk" onclick="goBack()">←</button>
       <div class="tb-title">Rasm yuklash</div>
     </div>
     <div class="stepper">
@@ -1274,7 +1396,7 @@ html,body{
   <!-- ══════════════ DETECTION ══════════════ -->
   <div class="screen" id="s-detect">
     <div class="topbar">
-      <button class="tbk" onclick="go('s-upload')">←</button>
+      <button class="tbk" onclick="goBack()">←</button>
       <div class="tb-title">AI Aniqlash</div>
       <button class="tb-action" onclick="resetCvs()">Reset</button>
     </div>
@@ -1308,7 +1430,36 @@ html,body{
           </div>
         </div>
         <div class="hint-pill anim anim-2">✋ Sariq nuqtalarni suring — konturni moslashtiring</div>
-        <div class="det-btns anim anim-3">
+
+        <!-- Grid sozlamalari -->
+        <div class="grid-controls anim anim-2">
+          <div class="gc-title">🔲 Grid o'lchami</div>
+          <div class="gc-btns">
+            <button class="gc-btn" onclick="setGridSize(2,2)">2×2</button>
+            <button class="gc-btn active" onclick="setGridSize(3,3)">3×3</button>
+            <button class="gc-btn" onclick="setGridSize(4,4)">4×4</button>
+            <button class="gc-btn" onclick="setGridSize(4,3)">4×3</button>
+            <button class="gc-btn" onclick="setGridSize(5,4)">5×4</button>
+          </div>
+        </div>
+
+        <!-- Rasm yuklash tugmalari -->
+        <div class="grid-img-bar anim anim-3">
+          <button class="btn btn-ghost" style="flex:1;font-size:12px" onclick="pickFromGallery()">
+            📱 Galereya
+          </button>
+          <button class="btn btn-ghost" style="flex:1;font-size:12px" onclick="openGridCatalog()">
+            📂 Katalog
+          </button>
+          <button class="btn btn-ghost" style="flex:0;padding:10px 14px;font-size:12px" id="toggle-grid-btn" onclick="toggleGrid()">
+            🔲
+          </button>
+          <button class="btn btn-ghost" style="flex:0;padding:10px 14px;font-size:12px;color:#e74c3c" onclick="clearGridImage()">
+            ✕
+          </button>
+        </div>
+
+        <div class="det-btns anim anim-4">
           <button class="btn btn-ghost" style="flex:1" onclick="reScan()">🔄 Qayta skan</button>
           <button class="btn btn-volt" style="flex:2" onclick="go('s-material')">Tasdiqlash →</button>
         </div>
@@ -1319,7 +1470,7 @@ html,body{
   <!-- ══════════════ MATERIAL ══════════════ -->
   <div class="screen" id="s-material">
     <div class="topbar">
-      <button class="tbk" onclick="go('s-detect')">←</button>
+      <button class="tbk" onclick="goBack()">←</button>
       <div class="tb-title">Material tanlash</div>
     </div>
     <div class="stepper">
@@ -1336,7 +1487,7 @@ html,body{
       </div>
 
       <div id="solid-panel">
-        <div class="sec"><span class="sec-title">Tur tanlang</span></div>
+        <div class="sec"><span class="sec-title">Rang tanlang</span></div>
         <div class="swatch-row">
           <div class="sw sel" onclick="selSwatch(this)">
             <div class="sw-circle" style="background:linear-gradient(135deg,#e0e0e8,#f4f4f8)"></div>
@@ -1361,6 +1512,30 @@ html,body{
           <div class="sw" onclick="selSwatch(this)">
             <div class="sw-circle" style="background:conic-gradient(#e8c98e,#c8a96e,#a8854a,#e8c98e)"></div>
             <div class="sw-name">Oltin Ko'zgu</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#f0e0d0,#e8d0b8)"></div>
+            <div class="sw-name">Krem Bej</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#d0e8d0,#b8d8b8)"></div>
+            <div class="sw-name">Menta Yashil</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#e8d0e8,#d8b8d8)"></div>
+            <div class="sw-name">Lavanda</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#f0c8c0,#e8b0a8)"></div>
+            <div class="sw-name">Qo'ng'ir-Pushti</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#c8d8e8,#b0c8d8)"></div>
+            <div class="sw-name">Moviy-Kulrang</div>
+          </div>
+          <div class="sw" onclick="selSwatch(this)">
+            <div class="sw-circle" style="background:linear-gradient(135deg,#e8e0c8,#d8d0b0)"></div>
+            <div class="sw-name">Qum Sariq</div>
           </div>
         </div>
         <div class="sec"><span class="sec-title">Narx katalogi</span></div>
@@ -1432,7 +1607,7 @@ html,body{
           <div class="mcard" onclick="selMCard(this)">
             <div class="mcard-img">🌅</div>
             <div class="mcard-body">
-              <div class="mcard-name">Okean Botqoq</div>
+              <div class="mcard-name">Okean To'lqini</div>
               <div class="mcard-price">195,000 so'm/m²</div>
             </div>
             <div class="mcard-sel-dot">✓</div>
@@ -1465,7 +1640,7 @@ html,body{
   <!-- ══════════════ LIGHTING ══════════════ -->
   <div class="screen" id="s-lighting">
     <div class="topbar">
-      <button class="tbk" onclick="go('s-material')">←</button>
+      <button class="tbk" onclick="goBack()">←</button>
       <div class="tb-title">Yoritish elementlari</div>
       <button class="tb-action" onclick="go('s-preview')">O'tkazib yubor</button>
     </div>
@@ -1488,7 +1663,7 @@ html,body{
       <div class="litem anim" onclick="togLight(this)">
         <div class="li-icon">💡</div>
         <div class="li-info">
-          <div class="li-name">Световой Линия</div>
+          <div class="li-name">Световой Линiya</div>
           <div class="li-desc">LED chiziq, metr uchun</div>
           <div class="li-price">25,000 so'm/m</div>
         </div>
@@ -1503,12 +1678,48 @@ html,body{
         </div>
         <div class="li-check">✓</div>
       </div>
+      <div class="litem anim anim-1" onclick="togLight(this)">
+        <div class="li-icon">🔦</div>
+        <div class="li-info">
+          <div class="li-name">Track Light 1-boshli</div>
+          <div class="li-desc">Compact rel · dimmerli</div>
+          <div class="li-price">85,000 so'm</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
+      <div class="litem anim anim-1" onclick="togLight(this)">
+        <div class="li-icon">🔦</div>
+        <div class="li-info">
+          <div class="li-name">Track Light 5-boshli</div>
+          <div class="li-desc">Keng maydon · RGB</div>
+          <div class="li-price">320,000 so'm</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
       <div class="litem anim anim-2" onclick="togLight(this)">
         <div class="li-icon">〰️</div>
         <div class="li-info">
           <div class="li-name">LED Profil Iliq</div>
           <div class="li-desc">3000K iliq oq lenta</div>
           <div class="li-price">35,000 so'm/m</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
+      <div class="litem anim anim-2" onclick="togLight(this)">
+        <div class="li-icon">〰️</div>
+        <div class="li-info">
+          <div class="li-name">LED Profil Sovuq</div>
+          <div class="li-desc">6000K sovuq oq lenta</div>
+          <div class="li-price">35,000 so'm/m</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
+      <div class="litem anim anim-2" onclick="togLight(this)">
+        <div class="li-icon">〰️</div>
+        <div class="li-info">
+          <div class="li-name">LED RGB Lenta</div>
+          <div class="li-desc">16 mln rang · WiFi boshqaruv</div>
+          <div class="li-price">55,000 so'm/m</div>
         </div>
         <div class="li-check">✓</div>
       </div>
@@ -1521,12 +1732,30 @@ html,body{
         </div>
         <div class="li-check">✓</div>
       </div>
+      <div class="litem anim anim-3" onclick="togLight(this)">
+        <div class="li-icon">🔮</div>
+        <div class="li-info">
+          <div class="li-name">Zamonaviy Lustura</div>
+          <div class="li-desc">Diametr 60sm · LED built-in</div>
+          <div class="li-price">650,000 so'm</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
       <div class="litem anim anim-4" onclick="togLight(this)">
         <div class="li-icon">•</div>
         <div class="li-info">
           <div class="li-name">Spot Light GU10</div>
           <div class="li-desc">7W LED · Dimmerli</div>
           <div class="li-price">45,000 so'm</div>
+        </div>
+        <div class="li-check">✓</div>
+      </div>
+      <div class="litem anim anim-4" onclick="togLight(this)">
+        <div class="li-icon">•</div>
+        <div class="li-info">
+          <div class="li-name">Spot Light MR16</div>
+          <div class="li-desc">5W · Burchakli yo'nalish</div>
+          <div class="li-price">38,000 so'm</div>
         </div>
         <div class="li-check">✓</div>
       </div>
@@ -1549,43 +1778,70 @@ html,body{
   <!-- ══════════════ PREVIEW ══════════════ -->
   <div class="screen" id="s-preview">
     <div class="topbar">
-      <button class="tbk" onclick="go('s-lighting')">←</button>
+      <button class="tbk" onclick="goBack()">←</button>
       <div class="tb-title">Dizayn ko'rinishi</div>
     </div>
     <div class="scroll">
-      <div class="prev-card anim">
-        <div class="prev-vis">
-          <svg viewBox="0 0 300 150" class="prev-svg">
-            <defs>
-              <linearGradient id="ceilG" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#e8eaf8;stop-opacity:.92"/>
-                <stop offset="100%" style="stop-color:#c0c4e0;stop-opacity:.80"/>
-              </linearGradient>
-              <filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-            </defs>
-            <polygon points="18,18 282,14 292,128 8,132" fill="url(#ceilG)" stroke="rgba(180,185,220,.6)" stroke-width="1.5"/>
-            <line x1="58" y1="18" x2="58" y2="130" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
-            <line x1="108" y1="16" x2="108" y2="131" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
-            <line x1="158" y1="15" x2="158" y2="131" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
-            <line x1="208" y1="15" x2="208" y2="131" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
-            <line x1="248" y1="15" x2="248" y2="130" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
-            <circle cx="83" cy="73" r="9" fill="rgba(255,225,80,.95)" stroke="#c8a000" stroke-width="1.5" filter="url(#glow)"/>
-            <circle cx="158" cy="72" r="9" fill="rgba(255,225,80,.95)" stroke="#c8a000" stroke-width="1.5" filter="url(#glow)"/>
-            <circle cx="233" cy="72" r="9" fill="rgba(255,225,80,.95)" stroke="#c8a000" stroke-width="1.5" filter="url(#glow)"/>
-            <line x1="60" y1="72" x2="260" y2="72" stroke="rgba(255,200,50,.25)" stroke-width="18" stroke-linecap="round"/>
-          </svg>
-          <div class="prev-wm"><div class="wm-txt">SHIFT PRO LITE</div></div>
-          <div class="prev-tag">Glossy White · Track Lights</div>
-        </div>
-        <div class="prev-specs">
-          <div class="ps-row"><span class="psl">Material</span><span class="psv">Standard Glossy</span></div>
-          <div class="ps-row"><span class="psl">Tur</span><span class="psv">Odnotonli</span></div>
-          <div class="ps-row"><span class="psl">Yoritish</span><span class="psv">Track Light 3-boshli</span></div>
-          <div class="ps-row"><span class="psl">Taxminiy maydon</span><span class="psv accent">28 m²</span></div>
-          <div class="ps-row"><span class="psl">Material narxi</span><span class="psv">2,380,000 so'm</span></div>
-          <div class="ps-row"><span class="psl">Yoritish narxi</span><span class="psv">180,000 so'm</span></div>
+
+      <!-- Avvalgi / Hozirgi toggle -->
+      <div style="display:flex;gap:8px;padding:14px 18px 0">
+        <button id="btn-after" class="seg-btn on" style="flex:1" onclick="togglePreview('after')">✨ Yangi dizayn</button>
+        <button id="btn-before" class="seg-btn" style="flex:1" onclick="togglePreview('before')">📷 Asl holat</button>
+      </div>
+
+      <!-- YANGI DIZAYN -->
+      <div id="view-after">
+        <div class="prev-card anim">
+          <div class="prev-vis" onclick="openZoomModal('after')" style="cursor:zoom-in">
+            <svg viewBox="0 0 300 150" class="prev-svg">
+              <defs>
+                <linearGradient id="ceilG" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#e8eaf8;stop-opacity:.92"/>
+                  <stop offset="100%" style="stop-color:#c0c4e0;stop-opacity:.80"/>
+                </linearGradient>
+                <filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <polygon points="18,18 282,14 292,128 8,132" fill="url(#ceilG)" stroke="rgba(180,185,220,.6)" stroke-width="1.5"/>
+              <line x1="58" y1="18" x2="58" y2="130" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
+              <line x1="108" y1="16" x2="108" y2="131" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
+              <line x1="158" y1="15" x2="158" y2="131" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
+              <line x1="208" y1="15" x2="208" y2="131" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
+              <line x1="248" y1="15" x2="248" y2="130" stroke="rgba(67,97,238,.3)" stroke-width=".8" stroke-dasharray="5,4"/>
+              <circle cx="83" cy="73" r="9" fill="rgba(255,225,80,.95)" stroke="#c8a000" stroke-width="1.5" filter="url(#glow)"/>
+              <circle cx="158" cy="72" r="9" fill="rgba(255,225,80,.95)" stroke="#c8a000" stroke-width="1.5" filter="url(#glow)"/>
+              <circle cx="233" cy="72" r="9" fill="rgba(255,225,80,.95)" stroke="#c8a000" stroke-width="1.5" filter="url(#glow)"/>
+              <line x1="60" y1="72" x2="260" y2="72" stroke="rgba(255,200,50,.25)" stroke-width="18" stroke-linecap="round"/>
+            </svg>
+            <div class="prev-wm"><div class="wm-txt">SHIFT PRO LITE</div></div>
+            <div class="prev-tag">Glossy White · Track Lights</div>
+            <div class="zoom-hint">🔍</div>
+          </div>
+          <div class="prev-specs">
+            <div class="ps-row"><span class="psl">Material</span><span class="psv">Standard Glossy</span></div>
+            <div class="ps-row"><span class="psl">Tur</span><span class="psv">Odnotonli</span></div>
+            <div class="ps-row"><span class="psl">Yoritish</span><span class="psv">Track Light 3-boshli</span></div>
+            <div class="ps-row"><span class="psl">Taxminiy maydon</span><span class="psv accent">28 m²</span></div>
+            <div class="ps-row"><span class="psl">Material narxi</span><span class="psv">2,380,000 so'm</span></div>
+            <div class="ps-row"><span class="psl">Yoritish narxi</span><span class="psv">180,000 so'm</span></div>
+          </div>
         </div>
       </div>
+
+      <!-- AVAL HOLAT -->
+      <div id="view-before" style="display:none;padding:14px 18px">
+        <div style="border-radius:16px;overflow:hidden;background:#0e0e1a;min-height:200px;display:flex;align-items:center;justify-content:center;cursor:zoom-in;position:relative" id="before-img-wrap" onclick="openZoomModal('before')">
+          <div id="before-placeholder" style="text-align:center;padding:32px">
+            <div style="font-size:48px;margin-bottom:12px">📷</div>
+            <div style="font-size:14px;color:var(--t3)">Yuklangan asl rasm</div>
+          </div>
+          <img id="before-img" style="display:none;width:100%;border-radius:16px" src="">
+          <div class="zoom-hint" id="before-zoom-hint" style="display:none">🔍</div>
+        </div>
+        <div style="margin-top:12px;padding:14px;background:var(--ink3);border-radius:12px;font-size:13px;color:var(--t3);text-align:center">
+          Bu — sizning xonangizning <strong style="color:var(--t1)">asl holati</strong>
+        </div>
+      </div>
+
       <div class="prev-total anim anim-1">
         <span class="pt-l">Jami taxmin</span>
         <span class="pt-v">2,560,000 <span>so'm</span></span>
@@ -1602,7 +1858,7 @@ html,body{
   <!-- ══════════════ ORDER DETAIL ══════════════ -->
   <div class="screen" id="s-order-detail">
     <div class="topbar">
-      <button class="tbk" onclick="go('s-home')">←</button>
+      <button class="tbk" onclick="goBack()">←</button>
       <div class="tb-title">Buyurtma #0042</div>
       <span class="o-badge b-new" style="font-size:10px">YANGI</span>
     </div>
@@ -1633,7 +1889,7 @@ html,body{
   <!-- ══════════════ ADMIN ══════════════ -->
   <div class="screen" id="s-admin">
     <div class="topbar">
-      <button class="tbk" onclick="go('s-home')">←</button>
+      <button class="tbk" onclick="goBack()">←</button>
       <div class="tb-title">Admin Panel</div>
     </div>
     <div class="scroll">
@@ -1668,7 +1924,7 @@ html,body{
         <div class="mr-text"><div class="mr-t">Katalog boshqaruvi</div><div class="mr-s">4 ta element · 6 joy qoldi</div></div>
         <div class="mr-r">›</div>
       </div>
-      <div class="menu-row anim anim-3">
+      <div class="menu-row anim anim-3" onclick="go('s-order-detail')">
         <div class="mr-icon ic-gold">📋</div>
         <div class="mr-text"><div class="mr-t">Buyurtmalar</div><div class="mr-s">3 ta yangi buyurtma</div></div>
         <div class="mr-badge">3</div>
@@ -1679,7 +1935,7 @@ html,body{
         <div class="mr-text"><div class="mr-t">Obuna</div><div class="mr-s">Free Reja · Upgrade mumkin</div></div>
         <div class="mr-r">›</div>
       </div>
-      <div class="menu-row anim anim-5">
+      <div class="menu-row anim anim-5" onclick="toast('Tez orada...','info')">
         <div class="mr-icon ic-sky">📊</div>
         <div class="mr-text"><div class="mr-t">Statistika</div><div class="mr-s">Daromad va foydalanish</div></div>
         <div class="mr-r">›</div>
@@ -1709,7 +1965,7 @@ html,body{
   <!-- ══════════════ CATALOG (Telegram kanal uslubi) ══════════════ -->
   <div class="screen" id="s-catalog">
     <div class="topbar">
-      <button class="tbk" onclick="go('s-admin')">←</button>
+      <button class="tbk" onclick="goBack()">←</button>
       <div class="tb-title">Katalog</div>
       <button class="tb-action" onclick="toast('Telegram kanal yangilanmoqda...','info');setTimeout(()=>{toast('Yangilandi ✓','ok')},1400)">🔄 Yangilash</button>
     </div>
@@ -1935,6 +2191,26 @@ html,body{
 
       <div style="height:24px"></div>
     </div>
+
+    <!-- Navbar -->
+    <div class="navbar">
+      <button class="nav-btn" onclick="navTo(0,'s-home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Asosiy</span>
+      </button>
+      <button class="nav-btn" onclick="navTo(1,'s-upload')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <span>Yangi</span>
+      </button>
+      <button class="nav-btn on" onclick="navTo(2,'s-catalog')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4361ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        <span>Katalog</span>
+      </button>
+      <button class="nav-btn" onclick="navTo(3,'s-profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Profil</span>
+      </button>
+    </div>
   </div>
 
   <!-- PHOTO DETAIL MODAL -->
@@ -1949,10 +2225,147 @@ html,body{
     </div>
   </div>
 
+  <!-- ══════════════ PROFILE ══════════════ -->
+  <div class="screen" id="s-profile">
+    <div class="topbar">
+      <div class="tb-title">Profil</div>
+    </div>
+    <div class="scroll">
+
+      <!-- Avatar va ism -->
+      <div style="display:flex;flex-direction:column;align-items:center;padding:28px 18px 20px">
+        <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#4361ee,#3a0ca3);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:14px;border:3px solid rgba(67,97,238,.3)">
+          👤
+        </div>
+        <div style="font-size:18px;font-weight:700;color:var(--t1)" id="profile-name">Foydalanuvchi</div>
+        <div style="font-size:13px;color:var(--t3);margin-top:4px" id="profile-username">@username</div>
+        <div style="margin-top:10px;padding:4px 16px;background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.25);border-radius:20px;font-size:11px;font-weight:700;color:#2ecc71;letter-spacing:.6px">
+          FREE REJA
+        </div>
+      </div>
+
+      <!-- Statistika -->
+      <div style="display:flex;gap:10px;padding:0 18px 20px">
+        <div style="flex:1;background:var(--ink3);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--line)">
+          <div class="stat-design" style="font-size:22px;font-weight:800;color:var(--volt)">0</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">Dizayn</div>
+        </div>
+        <div style="flex:1;background:var(--ink3);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--line)">
+          <div style="font-size:22px;font-weight:800;color:var(--cobalt)">0</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">Saqlangan</div>
+        </div>
+        <div style="flex:1;background:var(--ink3);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--line)">
+          <div style="font-size:22px;font-weight:800;color:var(--emerald)">0</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">Skan</div>
+        </div>
+      </div>
+
+      <!-- Menyu -->
+      <div class="sec"><span class="sec-title">Sozlamalar</span></div>
+
+      <div class="menu-row" onclick="showAllDesigns()">
+        <div class="mr-icon ic-volt">🎨</div>
+        <div class="mr-text"><div class="mr-t">Mening dizaynlarim</div><div class="mr-s">Saqlangan loyihalar</div></div>
+        <div class="mr-r">›</div>
+      </div>
+      <div class="menu-row" onclick="openM('m-logo')">
+        <div class="mr-icon" style="background:rgba(46,204,113,.1)">
+          <div id="profile-logo-preview" style="width:28px;height:28px;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:18px">🏷️</div>
+        </div>
+        <div class="mr-text">
+          <div class="mr-t">Shaxsiy logotip</div>
+          <div class="mr-s" id="logo-status-text">O'rnatilmagan</div>
+        </div>
+        <div class="mr-r">›</div>
+      </div>
+      <div class="menu-row" onclick="toast('Tez orada...','info')">
+        <div class="mr-icon ic-sky">🔔</div>
+        <div class="mr-text"><div class="mr-t">Bildirishnomalar</div><div class="mr-s">Yoniq</div></div>
+        <div class="mr-r">›</div>
+      </div>
+      <div class="menu-row" onclick="openM('m-lang')">
+        <div class="mr-icon ic-gold">🌐</div>
+        <div class="mr-text"><div class="mr-t">Til</div><div class="mr-s" id="current-lang-label">O'zbek</div></div>
+        <div class="mr-r">›</div>
+      </div>
+
+      <div class="sec" style="margin-top:8px"><span class="sec-title">Obuna</span></div>
+
+      <div style="margin:0 18px;background:linear-gradient(135deg,rgba(67,97,238,.15),rgba(58,12,163,.15));border:1px solid rgba(67,97,238,.3);border-radius:16px;padding:18px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <div style="font-size:15px;font-weight:700;color:var(--t1)">Pro rejaga o'ting</div>
+            <div style="font-size:12px;color:var(--t3);margin-top:2px">Cheksiz dizayn, watermarksiz</div>
+          </div>
+          <div style="font-size:24px">💎</div>
+        </div>
+        <button class="btn btn-volt" onclick="go('s-sub')">Upgrade →</button>
+      </div>
+
+      <div class="sec" style="margin-top:16px"><span class="sec-title">Ilova haqida</span></div>
+      <div class="menu-row" onclick="toast('Shift Pro Lite v3.0','info')">
+        <div class="mr-icon" style="background:rgba(255,255,255,.05)">ℹ️</div>
+        <div class="mr-text"><div class="mr-t">Versiya</div><div class="mr-s">v3.0 · Mini App</div></div>
+      </div>
+
+      <div style="height:32px"></div>
+    </div>
+
+    <!-- Navbar -->
+    <div class="navbar">
+      <button class="nav-btn" onclick="navTo(0,'s-home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Asosiy</span>
+      </button>
+      <button class="nav-btn" onclick="navTo(1,'s-upload')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <span>Yangi</span>
+      </button>
+      <button class="nav-btn" onclick="navTo(2,'s-catalog')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#50507a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        <span>Katalog</span>
+      </button>
+      <button class="nav-btn on" onclick="navTo(3,'s-profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4361ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Profil</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════ MY DESIGNS SCREEN ══════════════ -->
+  <div class="screen" id="s-my-designs">
+    <div class="topbar">
+      <button class="tbk" onclick="goBack()">←</button>
+      <div class="tb-title">Mening dizaynlarim</div>
+    </div>
+    <div class="scroll">
+      <div class="order-list" id="all-designs-list" style="padding:12px 0"></div>
+      <div style="height:24px"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ DESIGN DETAIL MODAL ══════════════ -->
+  <div class="backdrop" id="m-design-detail" onclick="closeM('m-design-detail')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="handle"></div>
+      <div class="sh-title" id="dd-name">Dizayn</div>
+      <div class="sh-sub" id="dd-date"></div>
+      <div class="order-summary">
+        <div class="os-row"><span class="os-l">Material</span><span class="os-v" id="dd-material">—</span></div>
+        <div class="os-row"><span class="os-l">Yoritish</span><span class="os-v" id="dd-lighting">—</span></div>
+        <div class="os-row"><span class="os-l">Maydon</span><span class="os-v" id="dd-area">—</span></div>
+        <div class="os-row"><span class="os-l">Narx</span><span class="os-v big" id="dd-price">—</span></div>
+      </div>
+      <button class="btn btn-volt" onclick="closeM('m-design-detail');go('s-preview')">🎨 Ko'rish</button>
+      <button class="btn btn-ghost" style="margin-top:8px;color:#e74c3c" id="dd-delete-btn">🗑️ O'chirish</button>
+      <button class="btn btn-ghost" style="margin-top:8px;color:var(--t3)" onclick="closeM('m-design-detail')">Yopish</button>
+    </div>
+  </div>
+
   <!-- ══════════════ SUPER ADMIN ══════════════ -->
   <div class="screen" id="s-super">
     <div class="topbar">
-      <button class="tbk" onclick="go('s-home')">←</button>
+      <button class="tbk" onclick="goBack()">←</button>
       <div class="tb-title">Super Admin</div>
     </div>
     <div class="scroll">
@@ -1977,7 +2390,7 @@ html,body{
         </div>
         <div class="pc-receipt">📎 click_to'lov_kvitansiya.jpg</div>
         <div class="pc-btns">
-          <button class="pc-rej" onclick="toast('To'lov rad etildi','err')">✕ Rad etish</button>
+          <button class="pc-rej" onclick="toast(&quot;To'lov rad etildi&quot;,'err')">✕ Rad etish</button>
           <button class="pc-ok" onclick="toast('Obuna faollashtirildi ✓','ok')">✓ Tasdiqlash va faollashtirish</button>
         </div>
       </div>
@@ -1988,7 +2401,7 @@ html,body{
         </div>
         <div class="pc-receipt">📎 payme_kvitansiya_2024.png</div>
         <div class="pc-btns">
-          <button class="pc-rej" onclick="toast('To'lov rad etildi','err')">✕ Rad etish</button>
+          <button class="pc-rej" onclick="toast(&quot;To'lov rad etildi&quot;,'err')">✕ Rad etish</button>
           <button class="pc-ok" onclick="toast('Obuna faollashtirildi ✓','ok')">✓ Tasdiqlash va faollashtirish</button>
         </div>
       </div>
@@ -2014,7 +2427,7 @@ html,body{
         <div class="mr-text"><div class="mr-t">Rejalarni boshqarish</div><div class="mr-s">Limit va narxlarni tahrirlash</div></div>
         <div class="mr-r">›</div>
       </div>
-      <div class="menu-row anim" onclick="toast('AI kredit qo'shildi ✓','ok')">
+      <div class="menu-row anim" onclick="toast(&quot;AI kredit qo'shildi ✓&quot;,'ok')">
         <div class="mr-icon ic-volt">🤖</div>
         <div class="mr-text"><div class="mr-t">AI kredit qo'shish</div><div class="mr-s">Admin uchun qo'lda to'ldirish</div></div>
         <div class="mr-r">›</div>
@@ -2166,6 +2579,114 @@ html,body{
     </div>
   </div>
 
+  <!-- ══════════════ TIL TANLASH MODAL ══════════════ -->
+  <div class="backdrop" id="m-lang" onclick="closeM('m-lang')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="handle"></div>
+      <div class="sh-title">🌐 Til tanlash</div>
+      <div class="sh-sub">Ilova tilini o'zgartiring</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+        <div class="lang-item" data-lang="uz" onclick="setLang('uz')">
+          <span class="lang-flag">🇺🇿</span>
+          <div class="lang-info"><div class="lang-name">O'zbek</div><div class="lang-native">O'zbek tili</div></div>
+          <span class="lang-check" id="lc-uz">✓</span>
+        </div>
+        <div class="lang-item" data-lang="ru" onclick="setLang('ru')">
+          <span class="lang-flag">🇷🇺</span>
+          <div class="lang-info"><div class="lang-name">Русский</div><div class="lang-native">Rus tili</div></div>
+          <span class="lang-check" id="lc-ru" style="opacity:0">✓</span>
+        </div>
+        <div class="lang-item" data-lang="kk" onclick="setLang('kk')">
+          <span class="lang-flag">🇰🇿</span>
+          <div class="lang-info"><div class="lang-name">Қазақша</div><div class="lang-native">Qozoq tili</div></div>
+          <span class="lang-check" id="lc-kk" style="opacity:0">✓</span>
+        </div>
+        <div class="lang-item" data-lang="ky" onclick="setLang('ky')">
+          <span class="lang-flag">🇰🇬</span>
+          <div class="lang-info"><div class="lang-name">Кыргызча</div><div class="lang-native">Qirg'iz tili</div></div>
+          <span class="lang-check" id="lc-ky" style="opacity:0">✓</span>
+        </div>
+        <div class="lang-item" data-lang="tg" onclick="setLang('tg')">
+          <span class="lang-flag">🇹🇯</span>
+          <div class="lang-info"><div class="lang-name">Тоҷикӣ</div><div class="lang-native">Tojik tili</div></div>
+          <span class="lang-check" id="lc-tg" style="opacity:0">✓</span>
+        </div>
+      </div>
+      <button class="btn btn-ghost" onclick="closeM('m-lang')">Yopish</button>
+    </div>
+  </div>
+
+  <!-- ══════════════ LOGOTIP MODAL ══════════════ -->
+  <div class="backdrop" id="m-logo" onclick="closeM('m-logo')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="handle"></div>
+      <div class="sh-title">🏷️ Shaxsiy Logotip</div>
+      <div class="sh-sub">Preview va PDF da ko'rinadi</div>
+
+      <!-- Logo preview -->
+      <div style="display:flex;justify-content:center;margin-bottom:20px">
+        <div id="logo-big-preview" style="
+          width:120px;height:120px;border-radius:16px;
+          background:var(--ink3);border:2px dashed var(--line2);
+          display:flex;align-items:center;justify-content:center;
+          font-size:48px;overflow:hidden;cursor:pointer;
+          transition:.2s" onclick="pickLogoImage()">
+          <span id="logo-big-icon">🏷️</span>
+          <img id="logo-big-img" style="display:none;width:100%;height:100%;object-fit:contain" src="">
+        </div>
+      </div>
+
+      <!-- Logo pozitsiya -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;
+          letter-spacing:.6px;margin-bottom:8px">Joylashuvi</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+          <button class="logo-pos-btn" data-pos="top-left" onclick="setLogoPos(this,'top-left')">↖ Yuqori chap</button>
+          <button class="logo-pos-btn active" data-pos="top-right" onclick="setLogoPos(this,'top-right')">↗ Yuqori o'ng</button>
+          <button class="logo-pos-btn" data-pos="bottom-right" onclick="setLogoPos(this,'bottom-right')">↘ Pastki o'ng</button>
+        </div>
+      </div>
+
+      <!-- Logo o'lchami -->
+      <div style="margin-bottom:16px">
+        <div style="font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;
+          letter-spacing:.6px;margin-bottom:8px">O'lchami</div>
+        <div style="display:flex;gap:8px">
+          <button class="logo-size-btn" data-size="small" onclick="setLogoSize(this,'small')">Kichik</button>
+          <button class="logo-size-btn active" data-size="medium" onclick="setLogoSize(this,'medium')">O'rta</button>
+          <button class="logo-size-btn" data-size="large" onclick="setLogoSize(this,'large')">Katta</button>
+        </div>
+      </div>
+
+      <button class="btn btn-volt" onclick="pickLogoImage()">📁 Logotip yuklash</button>
+      <button class="btn btn-ghost" id="logo-remove-btn" style="margin-top:8px;color:#e74c3c;display:none" onclick="removeLogo()">🗑️ Logotipni o'chirish</button>
+      <button class="btn btn-ghost" style="margin-top:8px;color:var(--t3)" onclick="closeM('m-logo')">Yopish</button>
+    </div>
+  </div>
+
+  <!-- ══════════════ GRID KATALOG MODAL ══════════════ -->
+  <div class="backdrop" id="m-grid-catalog" onclick="closeM('m-grid-catalog')">
+    <div class="sheet" onclick="event.stopPropagation()" style="max-height:85vh">
+      <div class="handle"></div>
+      <div class="sh-title">📂 Katalogdan tanlash</div>
+      <div class="sh-sub">Grid ichiga joylashtiriladigan rasm</div>
+      <div class="cat-scroll" style="margin:0 0 12px">
+        <button class="cpill on" onclick="filterGridCat(this,'all')">Barchasi</button>
+        <button class="cpill" onclick="filterGridCat(this,'osmon')">☁️ Osmon</button>
+        <button class="cpill" onclick="filterGridCat(this,'gul')">🌸 Gullar</button>
+        <button class="cpill" onclick="filterGridCat(this,'naqsh')">🔷 Naqshlar</button>
+        <button class="cpill" onclick="filterGridCat(this,'abstrakt')">✨ Abstrakt</button>
+      </div>
+      <div class="grid-catalog-grid" id="grid-catalog-items">
+        <!-- JS orqali yuklanadi -->
+      </div>
+      <button class="btn btn-volt" id="grid-catalog-confirm" onclick="confirmGridImage()" disabled>
+        ✓ Tanlash
+      </button>
+      <button class="btn btn-ghost" style="margin-top:8px" onclick="closeM('m-grid-catalog')">Bekor qilish</button>
+    </div>
+  </div>
+
   <!-- ══════════════ SAVE MODAL (o'rniga) ══════════════ -->
   <div class="backdrop" id="m-order" onclick="closeM('m-order')">
     <div class="sheet" onclick="event.stopPropagation()">
@@ -2218,6 +2739,47 @@ if(tg){
   tg.setBackgroundColor('#080810');
 }
 
+// ── ROL TIZIMI ──
+const SUPER_ADMIN_ID = 354426805;
+const ADMIN_IDS = []; // Keyinchalik adminlar qo'shiladi
+
+function getUserRole(){
+  const userId = tg?.initDataUnsafe?.user?.id;
+  if(!userId) return 'user'; // Bot ichida emas — oddiy ko'rinish
+  if(userId === SUPER_ADMIN_ID) return 'super';
+  if(ADMIN_IDS.includes(userId)) return 'admin';
+  return 'user';
+}
+
+const userRole = getUserRole();
+
+function applyRoleUI(){
+  const role = userRole;
+
+  // Barcha navbarlardagi tugmalarni topish va matn bo'yicha aniqlash
+  document.querySelectorAll('.navbar').forEach(navbar=>{
+    const buttons = navbar.querySelectorAll('.nav-btn');
+    buttons.forEach(btn=>{
+      const label = btn.querySelector('span')?.textContent?.trim();
+      const isAdminBtn = ['Admin','Админ'].includes(label);
+      const isSuperBtn = ['Super','Супер'].includes(label);
+      const isCatalogBtn = ['Katalog','Каталог'].includes(label);
+      const isProfileBtn = ['Profil','Профиль','Профил'].includes(label);
+
+      if(role === 'super'){
+        if(isAdminBtn || isSuperBtn) btn.style.display='flex';
+        if(isCatalogBtn || isProfileBtn) btn.style.display='none';
+      } else if(role === 'admin'){
+        if(isAdminBtn) btn.style.display='flex';
+        if(isSuperBtn || isCatalogBtn || isProfileBtn) btn.style.display='none';
+      } else {
+        if(isAdminBtn || isSuperBtn) btn.style.display='none';
+        if(isCatalogBtn || isProfileBtn) btn.style.display='flex';
+      }
+    });
+  });
+}
+
 // STATE
 let prev='s-home', cur='s-home', uploaded=false;
 let V=[], drag=-1, cvs2, ctx2;
@@ -2233,8 +2795,10 @@ function tick(){
 tick(); setInterval(tick,60000);
 
 // NAV — Mini App uchun optimallashtirilgan
+const screenHistory = [];
+
 function go(id){
-  prev=cur;
+  if(cur !== id) screenHistory.push(cur);
   const screens=document.querySelectorAll('.screen');
   screens.forEach(s=>{
     s.classList.remove('on');
@@ -2243,29 +2807,34 @@ function go(id){
   const el=document.getElementById(id);
   if(el){
     el.style.display='flex';
-    // Force reflow before adding class (fixes Telegram WebView timing issues)
     void el.offsetHeight;
     el.classList.add('on');
     const sc=el.querySelector('.scroll');
     if(sc) sc.scrollTop=0;
-    cur=id;
+    prev=cur; cur=id;
   }
   if(id==='s-detect') startDet();
+  if(id==='s-preview'){
+    setTimeout(updateAIPrice, 500);
+    setTimeout(drawLogoOnPreview, 300);
+  }
 
-  // Telegram Back Button
   if(tg){
     if(id==='s-home'){
       tg.BackButton.hide();
     } else {
       tg.BackButton.show();
-      tg.BackButton.onClick(function(){
-        goBack();
-      });
+      tg.BackButton.offClick(goBack);
+      tg.BackButton.onClick(goBack);
     }
   }
 }
 
-function goBack(){go(prev||'s-home')}
+function goBack(){
+  const last = screenHistory.pop();
+  if(last) go(last);
+  else go('s-home');
+}
 
 function navTo(n,id){
   document.querySelectorAll('.nav-btn').forEach((b,i)=>{
@@ -2275,6 +2844,10 @@ function navTo(n,id){
     if(svgEl)svgEl.setAttribute('stroke',isOn?'#4361ee':'#50507a');
   });
   go(id);
+  if(id==='s-profile'){
+    const el = document.querySelector('.stat-design');
+    if(el) el.textContent = getDesigns().length;
+  }
 }
 
 // UPLOAD
@@ -2318,8 +2891,160 @@ function triggerFileInput(){
   inp.click();
 }
 
+// ── ZOOM MODAL ──
+let zoomScale = 1, zoomX = 0, zoomY = 0;
+let zoomDragging = false, zoomLastX = 0, zoomLastY = 0;
+let zoomPinchDist = 0;
+
+function openZoomModal(mode){
+  const modal = document.getElementById('zoom-modal');
+  const stage = document.getElementById('zoom-stage');
+  const label = document.getElementById('zoom-label');
+  stage.innerHTML = '';
+  zoomScale = 1; zoomX = 0; zoomY = 0;
+
+  if(mode === 'after'){
+    label.textContent = "✨ Yangi dizayn";
+    const prevVis = document.querySelector('#view-after .prev-vis');
+    const clone = prevVis.cloneNode(true);
+    clone.style.cursor = 'default';
+    clone.removeAttribute('onclick');
+    clone.style.width = '320px';
+    clone.style.height = '160px';
+    clone.style.borderRadius = '16px';
+    stage.appendChild(clone);
+  } else {
+    label.textContent = "📷 Asl holat";
+    if(!uploadedImgSrc){ toast("Rasm yo'q",'err'); return; }
+    const img = document.createElement('img');
+    img.src = uploadedImgSrc;
+    stage.appendChild(img);
+  }
+
+  applyZoomTransform();
+  modal.classList.add('show');
+
+  const content = document.getElementById('zoom-content');
+  content.addEventListener('touchstart', onZoomTouchStart, {passive:false});
+  content.addEventListener('touchmove', onZoomTouchMove, {passive:false});
+  content.addEventListener('touchend', onZoomTouchEnd);
+  content.addEventListener('mousedown', onZoomMouseDown);
+  content.addEventListener('mousemove', onZoomMouseMove);
+  content.addEventListener('mouseup', onZoomMouseUp);
+  content.addEventListener('mouseleave', onZoomMouseUp);
+
+  if(tg) tg.HapticFeedback?.impactOccurred('light');
+}
+
+function closeZoomModal(){
+  document.getElementById('zoom-modal').classList.remove('show');
+  const content = document.getElementById('zoom-content');
+  content.removeEventListener('touchstart', onZoomTouchStart);
+  content.removeEventListener('touchmove', onZoomTouchMove);
+  content.removeEventListener('touchend', onZoomTouchEnd);
+  content.removeEventListener('mousedown', onZoomMouseDown);
+  content.removeEventListener('mousemove', onZoomMouseMove);
+  content.removeEventListener('mouseup', onZoomMouseUp);
+  content.removeEventListener('mouseleave', onZoomMouseUp);
+}
+
+function applyZoomTransform(){
+  const stage = document.getElementById('zoom-stage');
+  stage.style.transform = `translate(${zoomX}px, ${zoomY}px) scale(${zoomScale})`;
+}
+
+function zoomBy(delta){
+  zoomScale = Math.min(4, Math.max(0.5, zoomScale + delta));
+  applyZoomTransform();
+}
+
+function resetZoom(){
+  zoomScale = 1; zoomX = 0; zoomY = 0;
+  applyZoomTransform();
+}
+
+function onZoomWheel(e){
+  e.preventDefault();
+  zoomBy(e.deltaY > 0 ? -0.15 : 0.15);
+}
+
+function onZoomMouseDown(e){
+  zoomDragging = true;
+  zoomLastX = e.clientX; zoomLastY = e.clientY;
+}
+function onZoomMouseMove(e){
+  if(!zoomDragging) return;
+  zoomX += e.clientX - zoomLastX;
+  zoomY += e.clientY - zoomLastY;
+  zoomLastX = e.clientX; zoomLastY = e.clientY;
+  applyZoomTransform();
+}
+function onZoomMouseUp(){ zoomDragging = false; }
+
+function onZoomTouchStart(e){
+  if(e.touches.length === 1){
+    zoomDragging = true;
+    zoomLastX = e.touches[0].clientX;
+    zoomLastY = e.touches[0].clientY;
+  } else if(e.touches.length === 2){
+    zoomDragging = false;
+    zoomPinchDist = getPinchDist(e.touches);
+  }
+}
+function onZoomTouchMove(e){
+  e.preventDefault();
+  if(e.touches.length === 1 && zoomDragging){
+    const dx = e.touches[0].clientX - zoomLastX;
+    const dy = e.touches[0].clientY - zoomLastY;
+    zoomX += dx; zoomY += dy;
+    zoomLastX = e.touches[0].clientX;
+    zoomLastY = e.touches[0].clientY;
+    applyZoomTransform();
+  } else if(e.touches.length === 2){
+    const newDist = getPinchDist(e.touches);
+    const delta = (newDist - zoomPinchDist) * 0.005;
+    zoomScale = Math.min(4, Math.max(0.5, zoomScale + delta));
+    zoomPinchDist = newDist;
+    applyZoomTransform();
+  }
+}
+function onZoomTouchEnd(){ zoomDragging = false; onZoomDoubleTap(); }
+
+function getPinchDist(touches){
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.hypot(dx, dy);
+}
+
+let lastZoomTap = 0;
+function onZoomDoubleTap(){
+  const now = Date.now();
+  if(now - lastZoomTap < 300){
+    zoomScale = zoomScale > 1 ? 1 : 2;
+    zoomX = 0; zoomY = 0;
+    applyZoomTransform();
+  }
+  lastZoomTap = now;
+}
+
+function togglePreview(mode){
+  document.getElementById('view-after').style.display = mode==='after' ? 'block' : 'none';
+  document.getElementById('view-before').style.display = mode==='before' ? 'block' : 'none';
+  document.getElementById('btn-after').classList.toggle('on', mode==='after');
+  document.getElementById('btn-before').classList.toggle('on', mode==='before');
+  // Asl rasmni ko'rsat
+  if(mode==='before' && uploadedImgSrc){
+    const img = document.getElementById('before-img');
+    img.src = uploadedImgSrc;
+    img.style.display = 'block';
+    document.getElementById('before-placeholder').style.display = 'none';
+    const hint = document.getElementById('before-zoom-hint');
+    if(hint) hint.style.display = 'flex';
+  }
+}
+
 function showUploadedPhoto(src, name, size){
-  uploadedImgSrc = src; // Rasmni saqla — canvas da ishlatish uchun
+  uploadedImgSrc = src;
   const z = document.getElementById('dropZone');
   z.classList.add('lit');
   z.innerHTML='<div class="ring" style="width:36px;height:36px;margin:0"></div><div style="font-size:13px;color:var(--t2);margin-top:10px">Yuklanmoqda...</div>';
@@ -2328,9 +3053,7 @@ function showUploadedPhoto(src, name, size){
     const pa = document.getElementById('prev-area');
     pa.style.display='block';
     const inner = pa.querySelector('.img-preview-inner');
-    if(inner){
-      inner.innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:16px">`;
-    }
+    if(inner) inner.innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:16px">`;
     const fn = pa.querySelector('.fn');
     const fs = pa.querySelector('.fs');
     if(fn) fn.textContent = name;
@@ -2357,110 +3080,824 @@ function rmPhoto(){
   uploaded=false;
 }
 
-// AI DETECTION
+// ══════════════════════════════════════════
+// GEMINI AI — 5 TA UNIVERSAL SKILL
+// ══════════════════════════════════════════
+const GEMINI_KEY = 'AQ.Ab8RN6JXD_UcKvhHl68tkeagxouVahQ60nhCTUAL_1cZCc3NSA';
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+
+// Foydalanuvchi mamlakatini aniqlash
+function getUserCountry(){
+  const lang = tg?.initDataUnsafe?.user?.language_code || currentLang || 'uz';
+  const map = {
+    uz:'Oʻzbekiston (soʻm)', ru:'Rossiya (rubl)',
+    kk:'Qozogʻiston (tenge)', ky:'Qirgʻiziston (som)',
+    tg:'Tojikiston (somoni)', en:'International (USD)',
+    de:'Germany (EUR)', tr:'Turkey (TRY)', ar:'Arab (USD)',
+    uk:'Ukraine (UAH)', az:'Azerbaijan (AZN)'
+  };
+  return map[lang] || 'International (USD)';
+}
+
+// ── UNIVERSAL SYSTEM PROMPT ──
+function buildSystemPrompt(){
+  const country = getUserCountry();
+  return `Sen professional interyer dizayn va shift bezak mutaxassisissan.
+Foydalanuvchi mamlakati: ${country}
+Qoidalar:
+- Shu mamlakatning mahalliy bozorida mavjud materiallar tavsiya qil
+- Narxni shu mamlakatning valyutasida ko'rsat
+- Iqlim, madaniyat va mahalliy uslubga mos tavsiyalar ber
+- Agar mamlakat noma'lum — xalqaro standartlar va USD ishlat
+- Javobni FAQAT sof JSON formatda qaytar, hech qanday izoh yoki markdown yozma`;
+}
+
+// ── SKILL 1: XONA TAHLILI (Vision) ──
+async function skill_analyzeRoom(base64Image){
+  const body = {
+    system_instruction:{parts:[{text: buildSystemPrompt()}]},
+    contents:[{parts:[
+      {text:`Bu xona rasmini tahlil qil va quyidagi JSON qaytar:
+{
+  "room_type": "xona turi (yashash xonasi/yotoqxona/oshxona/hammom/ofis/boshqa)",
+  "ceiling_area": taxminiy shift maydoni raqam sifatida (faqat raqam),
+  "ceiling_height": taxminiy balandlik metrda (faqat raqam),
+  "confidence": ishonchlilik 0-100,
+  "current_style": "hozirgi xona uslubi",
+  "light_level": "yoritish darajasi (yaxshi/o'rtacha/yomon)",
+  "notes": "qisqa izoh (1-2 jumla)"
+}`},
+      {inline_data:{mime_type:'image/jpeg', data:base64Image}}
+    ]}],
+    generationConfig:{temperature:0.1, maxOutputTokens:400}
+  };
+  return await callGemini(body);
+}
+
+// ── SKILL 2: MATERIAL TAVSIYA ──
+async function skill_suggestMaterial(roomData){
+  const body = {
+    system_instruction:{parts:[{text: buildSystemPrompt()}]},
+    contents:[{parts:[{text:`
+Xona ma'lumotlari: ${JSON.stringify(roomData)}
+Ushbu xona uchun 3 ta material tavsiya qil:
+{
+  "suggestions": [
+    {
+      "name": "material nomi",
+      "type": "odnotoniy/fototapeta/tekstura",
+      "color": "rang tavsifi",
+      "price_range": "narx diapazoni (mahalliy valyutada)",
+      "pros": "afzalligi",
+      "style": "uslub (zamonaviy/klassik/minimalist/boshqa)",
+      "recommendation_score": 0-100
+    }
+  ],
+  "top_pick": "eng yaxshi tavsiya nomi",
+  "reasoning": "nima uchun bu eng yaxshi (1 jumla)"
+}`}]}],
+    generationConfig:{temperature:0.3, maxOutputTokens:600}
+  };
+  return await callGemini(body);
+}
+
+// ── SKILL 3: NARX HISOBLASH ──
+async function skill_calculatePrice(roomData, selectedMaterial, selectedLighting){
+  const body = {
+    system_instruction:{parts:[{text: buildSystemPrompt()}]},
+    contents:[{parts:[{text:`
+Xona: maydon ${roomData.ceiling_area||28} m², balandlik ${roomData.ceiling_height||2.7} m
+Tanlangan material: ${selectedMaterial}
+Tanlangan yoritish: ${selectedLighting}
+Mahalliy narxlarda hisoblang:
+{
+  "material_cost": faqat raqam (valyutasiz),
+  "material_unit": "valyuta nomi",
+  "lighting_cost": faqat raqam,
+  "installation_cost": faqat raqam,
+  "total_cost": faqat raqam,
+  "currency": "valyuta belgisi",
+  "breakdown": {
+    "material_per_m2": faqat raqam,
+    "labor_per_m2": faqat raqam
+  },
+  "timeframe": "ishlar qancha vaqt oladi",
+  "savings_tip": "tejash maslahat (1 jumla)"
+}`}]}],
+    generationConfig:{temperature:0.1, maxOutputTokens:300}
+  };
+  return await callGemini(body);
+}
+
+// ── SKILL 4: DIZAYN TAVSIYA ──
+async function skill_designAdvice(roomData, selectedMaterial){
+  const body = {
+    system_instruction:{parts:[{text: buildSystemPrompt()}]},
+    contents:[{parts:[{text:`
+Xona: ${JSON.stringify(roomData)}
+Tanlangan material: ${selectedMaterial}
+Qisqa dizayn maslahat ber:
+{
+  "style_advice": "uslub tavsiyasi (1-2 jumla)",
+  "color_harmony": "rang uygunligi maslahat",
+  "lighting_tip": "yoritish maslahat",
+  "avoid": "nimadan qochish kerak",
+  "trending": "hozirgi trend (shu mamlakatda)"
+}`}]}],
+    generationConfig:{temperature:0.5, maxOutputTokens:300}
+  };
+  return await callGemini(body);
+}
+
+// ── SKILL 5: KATALOG QIDIRUV ──
+async function skill_searchCatalog(query, roomData){
+  const body = {
+    system_instruction:{parts:[{text: buildSystemPrompt()}]},
+    contents:[{parts:[{text:`
+Foydalanuvchi izlayapti: "${query}"
+Xona: ${JSON.stringify(roomData||{})}
+Katalog tavsiyalar ber:
+{
+  "results": [
+    {
+      "name": "mahsulot nomi",
+      "category": "toifa",
+      "price_estimate": "taxminiy narx",
+      "match_score": 0-100,
+      "description": "qisqa tavsif"
+    }
+  ],
+  "total_found": raqam,
+  "search_tip": "qidiruv maslahat"
+}`}]}],
+    generationConfig:{temperature:0.3, maxOutputTokens:400}
+  };
+  return await callGemini(body);
+}
+
+// ── GEMINI API CHAQIRUVCHI ──
+async function callGemini(body){
+  const res = await fetch(`${GEMINI_URL}?key=${GEMINI_KEY}`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  });
+  if(!res.ok) throw new Error('Gemini API xatosi: ' + res.status);
+  const data = await res.json();
+  if(data.error) throw new Error(data.error.message);
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+  const clean = text.replace(/```json|```/g,'').trim();
+  return JSON.parse(clean);
+}
+
+// ── AI DETECTION — barcha skilllarni birlashtirgan ──
 function startDet(){
   document.getElementById('load-area').style.display='block';
   document.getElementById('cvs-area').style.display='none';
-  setTimeout(()=>{
-    document.getElementById('load-area').style.display='none';
-    document.getElementById('cvs-area').style.display='block';
-    initCvs();
-  },2200);
+
+  if(uploadedImgSrc){
+    const base64 = uploadedImgSrc.split(',')[1];
+
+    // SKILL 1: Xona tahlili
+    skill_analyzeRoom(base64)
+      .then(async result=>{
+        window._aiResult = result;
+
+        // Ishonchlilik ko'rsatish
+        const pct = result.confidence || 82;
+        const confEl = document.getElementById('conf-pct');
+        const fillEl = document.getElementById('conf-fill');
+        if(confEl) confEl.textContent = pct + '%';
+        if(fillEl) fillEl.style.width = pct + '%';
+
+        // Xona turi
+        if(result.room_type){
+          const detTitle = document.querySelector('#s-detect .tb-title');
+          if(detTitle) detTitle.textContent = result.room_type + ' · AI';
+        }
+
+        // Maydon
+        if(result.ceiling_area){
+          document.querySelectorAll('.psv.accent').forEach(e=>{
+            e.textContent = result.ceiling_area + ' m²';
+          });
+        }
+
+        document.getElementById('load-area').style.display='none';
+        document.getElementById('cvs-area').style.display='block';
+        initCvs();
+
+        // SKILL 2: Material tavsiya (background)
+        try{
+          const matSugg = await skill_suggestMaterial(result);
+          window._aiMaterials = matSugg;
+          if(matSugg.top_pick){
+            setTimeout(()=>toast('🎨 AI tavsiya: ' + matSugg.top_pick, 'ok'), 800);
+          }
+        } catch(e){ console.warn('Material skill:', e); }
+
+        // SKILL 4: Dizayn maslahat (background)
+        try{
+          const advice = await skill_designAdvice(result, 'standart material');
+          window._aiAdvice = advice;
+        } catch(e){ console.warn('Design skill:', e); }
+      })
+      .catch(err=>{
+        console.error('AI xatosi:', err);
+        toast('AI tahlil xatosi, davom etilmoqda...','err');
+        setTimeout(()=>{
+          document.getElementById('load-area').style.display='none';
+          document.getElementById('cvs-area').style.display='block';
+          initCvs();
+        },800);
+      });
+  } else {
+    setTimeout(()=>{
+      document.getElementById('load-area').style.display='none';
+      document.getElementById('cvs-area').style.display='block';
+      initCvs();
+    },2200);
+  }
+}
+
+// ── PREVIEW DA NARX HISOBLASH ──
+async function updateAIPrice(){
+  const selMat = document.querySelector('.sw.sel .sw-name');
+  const selLight = document.querySelector('.litem.sel .li-name');
+  if(!window._aiResult || !selMat) return;
+  try{
+    const price = await skill_calculatePrice(
+      window._aiResult,
+      selMat.textContent,
+      selLight ? selLight.textContent : 'standart'
+    );
+    if(price.total_cost){
+      const formatted = Number(price.total_cost).toLocaleString();
+      const ptV = document.querySelector('.pt-v');
+      if(ptV) ptV.innerHTML = formatted + ' <span>' + (price.currency||"so'm") + '</span>';
+      window._aiPrice = price;
+      if(price.savings_tip) toast('💡 ' + price.savings_tip, 'info');
+    }
+  } catch(e){ console.warn('Price skill:', e); }
 }
 
 // Yuklangan rasm saqlash uchun
 let uploadedImgSrc = null;
 
-function initCvs(){
-  cvs2=document.getElementById('cvs');
-  if(!cvs2)return;
-  const room=document.getElementById('cvs-room');
-  const W=room.offsetWidth, H=room.offsetHeight||255;
-  cvs2.width=W; cvs2.height=H;
-  ctx2=cvs2.getContext('2d');
-  V=[
-    {x:W*.07,y:H*.10},{x:W*.93,y:H*.08},
-    {x:W*.95,y:H*.84},{x:W*.05,y:H*.86}
-  ];
+// ══════════════════════════════════════
+// CANVAS — GRID + RASM JOYLASHTIRISH
+// ══════════════════════════════════════
 
-  // Agar haqiqiy rasm yuklangan bo'lsa — canvasga chiz
+let gridImg = null;        // Grid ichiga joylashtirilgan rasm
+let gridImgOpacity = 0.92; // Rasm shaffofligi
+let gridCols = 3;          // Grid ustunlar soni
+let gridRows = 3;          // Grid qatorlar soni
+let showGrid = true;       // Grid ko'rsatish
+
+function initCvs(){
+  cvs2 = document.getElementById('cvs');
+  if(!cvs2) return;
+
+  // Oldingi event listenerlarni tozalash
+  const newCvs = cvs2.cloneNode(true);
+  cvs2.parentNode.replaceChild(newCvs, cvs2);
+  cvs2 = newCvs;
+  ctx2 = cvs2.getContext('2d');
+
+  const room = document.getElementById('cvs-room');
+
   if(uploadedImgSrc){
     const img = new Image();
     img.onload = function(){
-      ctx2.drawImage(img, 0, 0, W, H);
-      drawCvsOverlay();
+      const W = room.offsetWidth;
+      const H = Math.round(W * img.naturalHeight / img.naturalWidth);
+      cvs2.width = W;
+      cvs2.height = H;
+      room.style.height = H + 'px';
+      V = [
+        {x:W*0.05, y:H*0.06},
+        {x:W*0.95, y:H*0.06},
+        {x:W*0.95, y:H*0.90},
+        {x:W*0.05, y:H*0.90}
+      ];
+      drawAll();
     };
     img.src = uploadedImgSrc;
   } else {
-    drawCvs();
+    const W = room.offsetWidth, H = 280;
+    cvs2.width = W;
+    cvs2.height = H;
+    room.style.height = H + 'px';
+    V = [
+      {x:W*0.05, y:H*0.06},
+      {x:W*0.95, y:H*0.06},
+      {x:W*0.95, y:H*0.90},
+      {x:W*0.05, y:H*0.90}
+    ];
+    drawAll();
   }
 
-  cvs2.addEventListener('mousedown',onMD);
-  cvs2.addEventListener('mousemove',onMM);
-  cvs2.addEventListener('mouseup',()=>{drag=-1; uploadedImgSrc ? redrawWithImg() : drawCvs()});
-  cvs2.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];onMD({clientX:t.clientX,clientY:t.clientY})},{passive:false});
-  cvs2.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0];onMM({clientX:t.clientX,clientY:t.clientY})},{passive:false});
-  cvs2.addEventListener('touchend',()=>{drag=-1; uploadedImgSrc ? redrawWithImg() : drawCvs()});
+  // Touch va mouse eventlar
+  cvs2.addEventListener('mousedown', onMD);
+  cvs2.addEventListener('mousemove', onMM);
+  cvs2.addEventListener('mouseup', ()=>{ drag=-1; drawAll(); });
+  cvs2.addEventListener('touchstart', e=>{ e.preventDefault(); const t=e.touches[0]; onMD({clientX:t.clientX, clientY:t.clientY}); }, {passive:false});
+  cvs2.addEventListener('touchmove', e=>{ e.preventDefault(); const t=e.touches[0]; onMM({clientX:t.clientX, clientY:t.clientY}); }, {passive:false});
+  cvs2.addEventListener('touchend', ()=>{ drag=-1; drawAll(); });
 }
 
-function redrawWithImg(){
-  if(!uploadedImgSrc || !ctx2) return;
+// ── ASOSIY CHIZISH FUNKSIYASI ──
+function drawAll(){
+  if(!ctx2 || V.length < 4) return;
+  const W = cvs2.width, H = cvs2.height;
+  ctx2.clearRect(0, 0, W, H);
+
+  // 1. Asl rasmni chiz
+  if(uploadedImgSrc){
+    const img = new Image();
+    img.onload = ()=>{
+      ctx2.drawImage(img, 0, 0, W, H);
+      drawGridInsideContour();
+      drawContour();
+      drawHandles();
+    };
+    img.src = uploadedImgSrc;
+  } else {
+    // Fon rangi
+    ctx2.fillStyle = '#0e0e20';
+    ctx2.fillRect(0, 0, W, H);
+    drawGridInsideContour();
+    drawContour();
+    drawHandles();
+  }
+}
+
+// ── GRID ICHIGA RASM JOYLASHTIRISH ──
+function drawGridInsideContour(){
+  if(!ctx2 || V.length < 4) return;
+
+  // Kontur ichini clip qilish
+  ctx2.save();
+  ctx2.beginPath();
+  ctx2.moveTo(V[0].x, V[0].y);
+  V.slice(1).forEach(v => ctx2.lineTo(v.x, v.y));
+  ctx2.closePath();
+  ctx2.clip();
+
+  const minX = Math.min(...V.map(v=>v.x));
+  const maxX = Math.max(...V.map(v=>v.x));
+  const minY = Math.min(...V.map(v=>v.y));
+  const maxY = Math.max(...V.map(v=>v.y));
+  const W2 = maxX - minX;
+  const H2 = maxY - minY;
+
+  // Grid ichiga rasm joylash
+  if(gridImg){
+    ctx2.globalAlpha = gridImgOpacity;
+    // Rasmni grid ichiga to'liq qoplaydigan qilib joylashtir
+    const imgRatio = gridImg.naturalWidth / gridImg.naturalHeight;
+    const areaRatio = W2 / H2;
+    let drawW, drawH, drawX, drawY;
+    if(imgRatio > areaRatio){
+      drawH = H2;
+      drawW = H2 * imgRatio;
+      drawX = minX - (drawW - W2) / 2;
+      drawY = minY;
+    } else {
+      drawW = W2;
+      drawH = W2 / imgRatio;
+      drawX = minX;
+      drawY = minY - (drawH - H2) / 2;
+    }
+    ctx2.drawImage(gridImg, drawX, drawY, drawW, drawH);
+    ctx2.globalAlpha = 1;
+  }
+
+  // Grid chiziqlarini chiz
+  if(showGrid){
+    ctx2.strokeStyle = 'rgba(67,97,238,0.5)';
+    ctx2.lineWidth = 1;
+    ctx2.setLineDash([4, 4]);
+
+    // Vertikal chiziqlar
+    for(let i=1; i<gridCols; i++){
+      const x = minX + (W2 / gridCols) * i;
+      ctx2.beginPath();
+      ctx2.moveTo(x, minY);
+      ctx2.lineTo(x, maxY);
+      ctx2.stroke();
+    }
+
+    // Gorizontal chiziqlar
+    for(let i=1; i<gridRows; i++){
+      const y = minY + (H2 / gridRows) * i;
+      ctx2.beginPath();
+      ctx2.moveTo(minX, y);
+      ctx2.lineTo(maxX, y);
+      ctx2.stroke();
+    }
+    ctx2.setLineDash([]);
+  }
+
+  ctx2.restore();
+}
+
+// ── KONTUR CHIZISH ──
+function drawContour(){
+  if(!ctx2 || V.length < 4) return;
+  ctx2.beginPath();
+  ctx2.moveTo(V[0].x, V[0].y);
+  V.slice(1).forEach(v => ctx2.lineTo(v.x, v.y));
+  ctx2.closePath();
+  ctx2.strokeStyle = 'rgba(99,130,255,0.95)';
+  ctx2.lineWidth = 2.5;
+  ctx2.setLineDash([]);
+  ctx2.stroke();
+
+  // Kontur ichini yengil ko'k bilan to'ldir (rasm bo'lmasa)
+  if(!gridImg && !uploadedImgSrc){
+    ctx2.fillStyle = 'rgba(67,97,238,0.12)';
+    ctx2.fill();
+  }
+}
+
+// ── BURCHAK NUQTALARINI CHIZISH ──
+function drawHandles(){
+  V.forEach((v, i)=>{
+    // Tashqi doira
+    ctx2.beginPath();
+    ctx2.arc(v.x, v.y, 14, 0, Math.PI*2);
+    ctx2.fillStyle = i===drag ? 'rgba(255,215,64,0.3)' : 'rgba(67,97,238,0.2)';
+    ctx2.fill();
+    // Ichki nuqta
+    ctx2.beginPath();
+    ctx2.arc(v.x, v.y, 8, 0, Math.PI*2);
+    ctx2.fillStyle = i===drag ? '#ffd740' : 'rgba(244,208,63,0.95)';
+    ctx2.fill();
+    ctx2.strokeStyle = 'rgba(255,255,255,0.9)';
+    ctx2.lineWidth = 2;
+    ctx2.stroke();
+  });
+}
+
+// ── GRID RASMINI YUKLASH (Katalog yoki Galereya) ──
+function loadGridImage(src){
   const img = new Image();
-  img.onload = function(){
-    ctx2.clearRect(0,0,cvs2.width,cvs2.height);
-    ctx2.drawImage(img, 0, 0, cvs2.width, cvs2.height);
-    drawCvsOverlay();
+  img.onload = ()=>{
+    gridImg = img;
+    drawAll();
+    toast('Rasm grid ichiga joylashtirildi ✓', 'ok');
   };
-  img.src = uploadedImgSrc;
+  img.onerror = ()=> toast('Rasm yuklanmadi', 'err');
+  img.src = src;
 }
 
-function drawCvsOverlay(){
-  if(!ctx2||V.length<3)return;
-  ctx2.beginPath();
-  ctx2.moveTo(V[0].x,V[0].y);
-  V.slice(1).forEach(v=>ctx2.lineTo(v.x,v.y));
-  ctx2.closePath();
-  ctx2.fillStyle='rgba(67,97,238,0.18)';ctx2.fill();
-  ctx2.strokeStyle='rgba(99,130,255,0.95)';ctx2.lineWidth=2;ctx2.stroke();
-  V.forEach((v,i)=>{
-    ctx2.beginPath();ctx2.arc(v.x,v.y,11,0,Math.PI*2);
-    ctx2.fillStyle=i===drag?'#ffd740':'rgba(244,208,63,0.95)';ctx2.fill();
-    ctx2.strokeStyle='rgba(255,255,255,0.8)';ctx2.lineWidth=2;ctx2.stroke();
-  });
+// ── GALEREYA / TELEGRAM KANALDAN RASM YUKLASH ──
+function pickGridImage(){
+  if(tg){
+    tg.showPopup({
+      title: '🖼️ Grid uchun rasm',
+      message: 'Qayerdan rasm olasiz?',
+      buttons: [
+        {id:'gallery', type:'default', text:'📱 Galereya / Kamera'},
+        {id:'catalog', type:'default', text:'📂 Katalogdan tanlash'},
+        {id:'cancel', type:'cancel', text:'Bekor qilish'}
+      ]
+    }, function(btnId){
+      if(btnId === 'gallery') pickFromGallery();
+      if(btnId === 'catalog') openGridCatalog();
+    });
+  } else {
+    pickFromGallery();
+  }
 }
 
-function drawCvs(){
-  if(!ctx2||V.length<3)return;
-  if(uploadedImgSrc){ redrawWithImg(); return; }
-  ctx2.clearRect(0,0,cvs2.width,cvs2.height);
-  ctx2.beginPath();
-  ctx2.moveTo(V[0].x,V[0].y);
-  V.slice(1).forEach(v=>ctx2.lineTo(v.x,v.y));
-  ctx2.closePath();
-  ctx2.fillStyle='rgba(67,97,238,0.14)';ctx2.fill();
-  ctx2.strokeStyle='rgba(99,130,255,0.9)';ctx2.lineWidth=2;ctx2.stroke();
-  V.forEach((v,i)=>{
-    ctx2.beginPath();ctx2.arc(v.x,v.y,11,0,Math.PI*2);
-    ctx2.fillStyle=i===drag?'#ffd740':'rgba(244,208,63,0.95)';ctx2.fill();
-    ctx2.strokeStyle='rgba(255,255,255,0.8)';ctx2.lineWidth=2;ctx2.stroke();
-  });
+function pickFromGallery(){
+  let inp = document.getElementById('grid-img-inp');
+  if(!inp){
+    inp = document.createElement('input');
+    inp.type = 'file';
+    inp.id = 'grid-img-inp';
+    inp.accept = 'image/*';
+    inp.style.display = 'none';
+    document.body.appendChild(inp);
+  }
+  inp.onchange = function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => loadGridImage(ev.target.result);
+    reader.readAsDataURL(file);
+  };
+  inp.click();
 }
+
+function openGridCatalog(){
+  // Katalog modal ochiladi — foydalanuvchi rasm tanlaydi
+  openM('m-grid-catalog');
+  renderGridCatalog();
+}
+
+// ── GRID SOZLAMALARI ──
+function setGridSize(cols, rows){
+  gridCols = cols;
+  gridRows = rows;
+  drawAll();
+}
+
+function toggleGrid(){
+  showGrid = !showGrid;
+  drawAll();
+  const btn = document.getElementById('toggle-grid-btn');
+  if(btn) btn.textContent = showGrid ? '🔲 Grid yashirish' : '🔲 Grid ko\'rsatish';
+}
+
+function clearGridImage(){
+  gridImg = null;
+  drawAll();
+  toast('Grid tozalandi', 'ok');
+}
+
+function drawCvs(){ drawAll(); }
+function redrawWithImg(){ drawAll(); }
+function drawCvsOverlay(){ drawAll(); }
 
 function getP(e){
-  const r=cvs2.getBoundingClientRect();
-  return{x:(e.clientX-r.left)*(cvs2.width/r.width),y:(e.clientY-r.top)*(cvs2.height/r.height)};
+  const r = cvs2.getBoundingClientRect();
+  return {
+    x: (e.clientX - r.left) * (cvs2.width / r.width),
+    y: (e.clientY - r.top) * (cvs2.height / r.height)
+  };
 }
-function onMD(e){const p=getP(e);drag=V.findIndex(v=>Math.hypot(v.x-p.x,v.y-p.y)<18)}
-function onMM(e){if(drag<0)return;V[drag]=getP(e);drawCvs()}
-function resetCvs(){initCvs();toast('Kontour asl holatga qaytarildi','info')}
+
+function onMD(e){
+  const p = getP(e);
+  drag = V.findIndex(v => Math.hypot(v.x-p.x, v.y-p.y) < 22);
+}
+
+function onMM(e){
+  if(drag < 0) return;
+  const p = getP(e);
+  // Canvasdan chiqmasin
+  V[drag] = {
+    x: Math.max(0, Math.min(cvs2.width, p.x)),
+    y: Math.max(0, Math.min(cvs2.height, p.y))
+  };
+  drawAll();
+}
+
+function resetCvs(){
+  gridImg = null;
+  if(cvs2){
+    const W = cvs2.width, H = cvs2.height;
+    V = [
+      {x:W*0.05, y:H*0.06},
+      {x:W*0.95, y:H*0.06},
+      {x:W*0.95, y:H*0.90},
+      {x:W*0.05, y:H*0.90}
+    ];
+    drawAll();
+  }
+  toast('Kontour asl holatga qaytarildi', 'info');
+}
+
 function reScan(){
   document.getElementById('load-area').style.display='block';
   document.getElementById('cvs-area').style.display='none';
-  setTimeout(()=>{
-    document.getElementById('load-area').style.display='none';
-    document.getElementById('cvs-area').style.display='block';
-    initCvs();toast('Qayta aniqlash bajarildi ✓','ok');
-  },1800);
+  if(uploadedImgSrc){
+    const base64 = uploadedImgSrc.split(',')[1];
+    skill_analyzeRoom(base64)
+      .then(result=>{
+        window._aiResult = result;
+        const pct = result.confidence || 84;
+        const confEl = document.getElementById('conf-pct');
+        const fillEl = document.getElementById('conf-fill');
+        if(confEl) confEl.textContent = pct+'%';
+        if(fillEl) fillEl.style.width = pct+'%';
+        document.getElementById('load-area').style.display='none';
+        document.getElementById('cvs-area').style.display='block';
+        initCvs();
+        toast('Qayta aniqlash bajarildi ✓','ok');
+      })
+      .catch(()=>{
+        setTimeout(()=>{
+          document.getElementById('load-area').style.display='none';
+          document.getElementById('cvs-area').style.display='block';
+          initCvs();
+          toast('Qayta aniqlash bajarildi ✓','ok');
+        },1800);
+      });
+  } else {
+    setTimeout(()=>{
+      document.getElementById('load-area').style.display='none';
+      document.getElementById('cvs-area').style.display='block';
+      initCvs();
+      toast('Qayta aniqlash bajarildi ✓','ok');
+    },1800);
+  }
+}
+
+// ── LOGOTIP TIZIMI ──
+let logoSrc = localStorage.getItem('shift_logo') || null;
+let logoPos = localStorage.getItem('shift_logo_pos') || 'top-right';
+let logoSize = localStorage.getItem('shift_logo_size') || 'medium';
+
+const LOGO_SIZES = { small:40, medium:65, large:90 };
+const LOGO_MARGIN = 14;
+
+function pickLogoImage(){
+  let inp = document.getElementById('logo-file-inp');
+  if(!inp){
+    inp = document.createElement('input');
+    inp.type = 'file';
+    inp.id = 'logo-file-inp';
+    inp.accept = 'image/*';
+    inp.style.display = 'none';
+    document.body.appendChild(inp);
+  }
+  inp.onchange = function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev=>{
+      logoSrc = ev.target.result;
+      localStorage.setItem('shift_logo', logoSrc);
+      updateLogoUI();
+      drawLogoOnPreview();
+      toast('Logotip o\'rnatildi ✓','ok');
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+}
+
+function setLogoPos(el, pos){
+  logoPos = pos;
+  localStorage.setItem('shift_logo_pos', pos);
+  document.querySelectorAll('.logo-pos-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  drawLogoOnPreview();
+}
+
+function setLogoSize(el, size){
+  logoSize = size;
+  localStorage.setItem('shift_logo_size', size);
+  document.querySelectorAll('.logo-size-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  drawLogoOnPreview();
+}
+
+function removeLogo(){
+  logoSrc = null;
+  localStorage.removeItem('shift_logo');
+  updateLogoUI();
+  drawLogoOnPreview();
+  toast('Logotip o\'chirildi','ok');
+}
+
+function updateLogoUI(){
+  const bigIcon = document.getElementById('logo-big-icon');
+  const bigImg = document.getElementById('logo-big-img');
+  const removeBtn = document.getElementById('logo-remove-btn');
+  const statusTxt = document.getElementById('logo-status-text');
+  const profilePreview = document.getElementById('profile-logo-preview');
+
+  if(logoSrc){
+    if(bigIcon) bigIcon.style.display = 'none';
+    if(bigImg){ bigImg.src = logoSrc; bigImg.style.display = 'block'; }
+    if(removeBtn) removeBtn.style.display = 'block';
+    if(statusTxt) statusTxt.textContent = 'O\'rnatilgan ✓';
+    if(profilePreview){
+      profilePreview.innerHTML = `<img src="${logoSrc}" style="width:28px;height:28px;object-fit:contain;border-radius:4px">`;
+    }
+  } else {
+    if(bigIcon) bigIcon.style.display = 'block';
+    if(bigImg){ bigImg.src = ''; bigImg.style.display = 'none'; }
+    if(removeBtn) removeBtn.style.display = 'none';
+    if(statusTxt) statusTxt.textContent = 'O\'rnatilmagan';
+    if(profilePreview) profilePreview.innerHTML = '🏷️';
+  }
+}
+
+function drawLogoOnPreview(){
+  // Preview SVG ustiga logotip qo'yish
+  const prevVis = document.querySelector('#view-after .prev-vis');
+  if(!prevVis) return;
+
+  // Eski logotip elementini o'chirish
+  const old = document.getElementById('preview-logo-el');
+  if(old) old.remove();
+
+  if(!logoSrc) return;
+
+  const size = LOGO_SIZES[logoSize] || 65;
+  const m = LOGO_MARGIN;
+  let style = `position:absolute;width:${size}px;height:${size}px;object-fit:contain;border-radius:8px;z-index:10;`;
+
+  if(logoPos === 'top-left')     style += `top:${m}px;left:${m}px;`;
+  if(logoPos === 'top-right')    style += `top:${m}px;right:${m}px;`;
+  if(logoPos === 'bottom-right') style += `bottom:${m}px;right:${m}px;`;
+  if(logoPos === 'bottom-left')  style += `bottom:${m}px;left:${m}px;`;
+
+  const img = document.createElement('img');
+  img.id = 'preview-logo-el';
+  img.src = logoSrc;
+  img.style.cssText = style;
+  prevVis.style.position = 'relative';
+  prevVis.appendChild(img);
+}
+
+function initLogoUI(){
+  updateLogoUI();
+  // Pozitsiya va o'lcham tugmalarini yangilash
+  document.querySelectorAll('.logo-pos-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.pos === logoPos);
+  });
+  document.querySelectorAll('.logo-size-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.size === logoSize);
+  });
+}
+
+// ── GRID KATALOG ──
+const CATALOG_IMAGES = [
+  {id:'c1', cat:'osmon', label:'Bulutli Osmon', color:'#87CEEB', emoji:'☁️'},
+  {id:'c2', cat:'osmon', label:'Tun Osmon', color:'#1a1a4e', emoji:'🌙'},
+  {id:'c3', cat:'osmon', label:'Shafaq', color:'#ff6b6b', emoji:'🌅'},
+  {id:'c4', cat:'osmon', label:'Ko\'k Osmon', color:'#4fc3f7', emoji:'🔵'},
+  {id:'c5', cat:'gul', label:'Atirgul', color:'#e91e63', emoji:'🌹'},
+  {id:'c6', cat:'gul', label:'Lola', color:'#ff5722', emoji:'🌷'},
+  {id:'c7', cat:'gul', label:'Yasmin', color:'#fff9c4', emoji:'🌼'},
+  {id:'c8', cat:'gul', label:'3D Gul', color:'#9c27b0', emoji:'💐'},
+  {id:'c9', cat:'naqsh', label:'Geometrik', color:'#37474f', emoji:'🔷'},
+  {id:'c10', cat:'naqsh', label:'Mozaika', color:'#00796b', emoji:'🔹'},
+  {id:'c11', cat:'naqsh', label:'Arabik', color:'#5d4037', emoji:'🌀'},
+  {id:'c12', cat:'naqsh', label:'Klassik', color:'#455a64', emoji:'⬡'},
+  {id:'c13', cat:'abstrakt', label:'Marmur', color:'#f5f5f5', emoji:'⬜'},
+  {id:'c14', cat:'abstrakt', label:'Oltin', color:'#ffd700', emoji:'✨'},
+  {id:'c15', cat:'abstrakt', label:'Gradient', color:'#7c4dff', emoji:'🌈'},
+  {id:'c16', cat:'abstrakt', label:'Beton', color:'#90a4ae', emoji:'🔲'},
+];
+
+let selectedCatalogImg = null;
+
+function renderGridCatalog(filter='all'){
+  const el = document.getElementById('grid-catalog-items');
+  if(!el) return;
+  const items = filter==='all' ? CATALOG_IMAGES : CATALOG_IMAGES.filter(i=>i.cat===filter);
+  el.innerHTML = items.map(img=>`
+    <div>
+      <div class="gc-item ${selectedCatalogImg?.id===img.id?'sel':''}"
+           id="gci-${img.id}"
+           onclick="selectCatalogImg('${img.id}')">
+        <div style="width:100%;height:100%;background:${img.color};
+          display:flex;align-items:center;justify-content:center;
+          font-size:32px;min-height:80px">
+          ${img.emoji}
+        </div>
+      </div>
+      <div class="gc-item-label">${img.label}</div>
+    </div>
+  `).join('');
+}
+
+function filterGridCat(el, cat){
+  el.closest('.cat-scroll').querySelectorAll('.cpill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  renderGridCatalog(cat);
+}
+
+function selectCatalogImg(id){
+  selectedCatalogImg = CATALOG_IMAGES.find(i=>i.id===id);
+  document.querySelectorAll('.gc-item').forEach(el=>el.classList.remove('sel'));
+  const el = document.getElementById('gci-'+id);
+  if(el) el.classList.add('sel');
+  const confirmBtn = document.getElementById('grid-catalog-confirm');
+  if(confirmBtn) confirmBtn.removeAttribute('disabled');
+}
+
+function confirmGridImage(){
+  if(!selectedCatalogImg) return;
+  // Emoji dan canvas rasm yaratish
+  const c = document.createElement('canvas');
+  c.width = 400; c.height = 400;
+  const cx = c.getContext('2d');
+  cx.fillStyle = selectedCatalogImg.color;
+  cx.fillRect(0,0,400,400);
+  cx.font = '180px serif';
+  cx.textAlign = 'center';
+  cx.textBaseline = 'middle';
+  cx.fillText(selectedCatalogImg.emoji, 200, 200);
+  loadGridImage(c.toDataURL());
+  closeM('m-grid-catalog');
+  selectedCatalogImg = null;
+}
+
+function openGridCatalog(){
+  selectedCatalogImg = null;
+  openM('m-grid-catalog');
+  renderGridCatalog();
+  const confirmBtn = document.getElementById('grid-catalog-confirm');
+  if(confirmBtn) confirmBtn.setAttribute('disabled','');
 }
 
 // CATALOG FILTER
@@ -2513,6 +3950,7 @@ function setPlan(n,p){payN=n;payP=p;
 }
 function savePDF(){
   closeM('m-order');
+  saveCurrentDesign(); // Dizaynni saqlash
   const date = new Date().toLocaleDateString('uz-UZ');
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
   <style>body{font-family:Arial,sans-serif;background:#fff;color:#111;padding:32px;max-width:500px;margin:0 auto}
@@ -2598,6 +4036,581 @@ function syncTelegram(){
   },1600);
 }
 
+// ── TIL TIZIMI ──
+const LANGS = {
+  uz: {
+    // Navbar
+    label:"O'zbek", home:"Asosiy", newDesign:"Yangi", catalog:"Katalog",
+    profile:"Profil", admin:"Admin", super:"Super",
+    // Home
+    newDesignBtn:"Yangi Dizayn", newDesignSub:"Xona rasmini yuklang",
+    recentDesigns:"So'nggi dizaynlar", allBtn:"Barchasi →",
+    noDesigns:"Hali dizayn yo'q", noDesignsSub:"Yangi dizayn yarating!",
+    // Upload
+    uploadTitle:"Rasm Yuklash", uploadDrop:"Rasm yuklash uchun bosing",
+    uploadDropSub:"Xona rasmini oling yoki galereyadan tanlang",
+    uploadFormats:"JPG, PNG · Max 10MB",
+    uploadedTitle:"Rasm yuklandi", analyzeBtn:"Shiftni tahlil qilish",
+    removePhoto:"O'chirish",
+    // Detect
+    detectTitle:"AI Aniqlash", detectLoad:"AI shift konturini aniqlamoqda...",
+    detectLoadSub:"Gemini Vision API · Ishlov berilmoqda",
+    detectHint:"Sariq nuqtalarni suring — konturni moslashtiring",
+    detectConfirm:"Tasdiqlash →", detectRescan:"Qayta skan",
+    detectReset:"Reset",
+    // Material
+    materialTitle:"Material Tanlash", colorSelect:"Rang tanlang",
+    photoSelect:"Foto tanlang", solidTab:"Odnotoniy", photoTab:"Fototapeta",
+    // Lighting
+    lightingTitle:"Yoritish Tanlash", allLights:"Barchasi",
+    lightingNext:"Dizaynni ko'rish →", lightingSkip:"O'tkazib yubor",
+    // Preview
+    previewTitle:"Dizayn ko'rinishi", afterView:"✨ Yangi dizayn",
+    beforeView:"📷 Asl holat", totalPrice:"Jami taxmin",
+    saveImg:"🖼️ Rasm", savePdf:"📄 PDF saqlash",
+    beforeNote:"Bu — sizning xonangizning asl holati",
+    wmNotice:"⚠️ Pro rejaga o'ting — suratdan watermark olib tashlanadi",
+    // Profile
+    profileTitle:"Profil", settingsSection:"Sozlamalar",
+    myDesigns:"Mening dizaynlarim", myDesignsSub:"Saqlangan loyihalar",
+    notifications:"Bildirishnomalar", notificationsOn:"Yoniq",
+    langSetting:"Til", versionInfo:"Ilova haqida",
+    subscribeSection:"Obuna", upgradeTitle:"Pro rejaga o'ting",
+    upgradeSub:"Cheksiz dizayn, watermarksiz", upgradeBtn:"Upgrade →",
+    // Catalog
+    catalogTitle:"Katalog", catalogAll:"Barchasi",
+    // Admin
+    adminTitle:"Admin Panel", pendingOrders:"Kutilayotgan to'lovlar",
+    // Modals
+    saveTitle:"💾 Natijani saqlash", saveSub:"Dizayn xulosasini yuklab oling",
+    langTitle:"🌐 Til tanlash", langSub:"Ilova tilini o'zgartiring",
+    tgTitle:"✈️ Telegram Sozlamalari", tgSub:"Katalog rasmlar manbasini ulang",
+    closeBtn:"Yopish", cancelBtn:"Bekor qilish",
+    // Design detail
+    ddTitle:"Dizayn", ddMaterial:"Material", ddLighting:"Yoritish",
+    ddArea:"Maydon", ddPrice:"Narx", ddView:"🎨 Ko'rish", ddDelete:"🗑️ O'chirish",
+    // Toast
+    saved:"Saqlandi ✓", imgSaved:"Rasm saqlandi ✓", langSaved:"Saqlandi ✓",
+    // Misc
+    designCount:"Dizayn", savedCount:"Saqlangan", scanCount:"Skan",
+    material:"Material", area:"Maydon taxmini", lighting:"Yoritish",
+    totalEst:"Jami taxmin", date:"Sana"
+  },
+  ru: {
+    label:"Русский", home:"Главная", newDesign:"Новый", catalog:"Каталог",
+    profile:"Профиль", admin:"Админ", super:"Супер",
+    newDesignBtn:"Новый Дизайн", newDesignSub:"Загрузите фото комнаты",
+    recentDesigns:"Последние дизайны", allBtn:"Все →",
+    noDesigns:"Нет дизайнов", noDesignsSub:"Создайте новый дизайн!",
+    uploadTitle:"Загрузка фото", uploadDrop:"Нажмите для загрузки",
+    uploadDropSub:"Сделайте фото или выберите из галереи",
+    uploadFormats:"JPG, PNG · Макс 10МБ",
+    uploadedTitle:"Фото загружено", analyzeBtn:"Анализировать потолок",
+    removePhoto:"Удалить",
+    detectTitle:"AI Анализ", detectLoad:"AI определяет контур потолка...",
+    detectLoadSub:"Gemini Vision API · Обработка",
+    detectHint:"Перетащите точки — настройте контур",
+    detectConfirm:"Подтвердить →", detectRescan:"Пересканировать",
+    detectReset:"Сброс",
+    materialTitle:"Выбор материала", colorSelect:"Выберите цвет",
+    photoSelect:"Выберите фото", solidTab:"Однотонный", photoTab:"Фотообои",
+    lightingTitle:"Выбор освещения", allLights:"Все",
+    lightingNext:"Посмотреть дизайн →", lightingSkip:"Пропустить",
+    previewTitle:"Предпросмотр дизайна", afterView:"✨ Новый дизайн",
+    beforeView:"📷 Оригинал", totalPrice:"Итого",
+    saveImg:"🖼️ Изображение", savePdf:"📄 Сохранить PDF",
+    beforeNote:"Это — оригинальный вид вашей комнаты",
+    wmNotice:"⚠️ Перейдите на Pro — убрать водяной знак",
+    profileTitle:"Профиль", settingsSection:"Настройки",
+    myDesigns:"Мои дизайны", myDesignsSub:"Сохранённые проекты",
+    notifications:"Уведомления", notificationsOn:"Включено",
+    langSetting:"Язык", versionInfo:"О приложении",
+    subscribeSection:"Подписка", upgradeTitle:"Перейти на Pro",
+    upgradeSub:"Безлимитный дизайн без водяного знака", upgradeBtn:"Upgrade →",
+    catalogTitle:"Каталог", catalogAll:"Все",
+    adminTitle:"Панель Admin", pendingOrders:"Ожидающие оплаты",
+    saveTitle:"💾 Сохранить результат", saveSub:"Скачайте сводку дизайна",
+    langTitle:"🌐 Выбор языка", langSub:"Измените язык приложения",
+    tgTitle:"✈️ Настройки Telegram", tgSub:"Подключите источник каталога",
+    closeBtn:"Закрыть", cancelBtn:"Отмена",
+    ddTitle:"Дизайн", ddMaterial:"Материал", ddLighting:"Освещение",
+    ddArea:"Площадь", ddPrice:"Цена", ddView:"🎨 Просмотр", ddDelete:"🗑️ Удалить",
+    saved:"Сохранено ✓", imgSaved:"Изображение сохранено ✓", langSaved:"Сохранено ✓",
+    designCount:"Дизайны", savedCount:"Сохранённые", scanCount:"Сканы",
+    material:"Материал", area:"Площадь", lighting:"Освещение",
+    totalEst:"Итого", date:"Дата"
+  },
+  kk: {
+    label:"Қазақша", home:"Басты", newDesign:"Жаңа", catalog:"Каталог",
+    profile:"Профиль", admin:"Әкімші", super:"Супер",
+    newDesignBtn:"Жаңа Дизайн", newDesignSub:"Бөлме суретін жүктеңіз",
+    recentDesigns:"Соңғы дизайндар", allBtn:"Барлығы →",
+    noDesigns:"Дизайн жоқ", noDesignsSub:"Жаңа дизайн жасаңыз!",
+    uploadTitle:"Сурет жүктеу", uploadDrop:"Жүктеу үшін басыңыз",
+    uploadDropSub:"Бөлме суретін түсіріңіз немесе галереядан таңдаңыз",
+    uploadFormats:"JPG, PNG · Макс 10МБ",
+    uploadedTitle:"Сурет жүктелді", analyzeBtn:"Төбені талдау",
+    removePhoto:"Жою",
+    detectTitle:"AI Анықтау", detectLoad:"AI төбе контурын анықтауда...",
+    detectLoadSub:"Gemini Vision API · Өңделуде",
+    detectHint:"Сары нүктелерді жылжытыңыз — контурды реттеңіз",
+    detectConfirm:"Растау →", detectRescan:"Қайта сканерлеу",
+    detectReset:"Қалпына келтіру",
+    materialTitle:"Материал таңдау", colorSelect:"Түс таңдаңыз",
+    photoSelect:"Фото таңдаңыз", solidTab:"Бір түсті", photoTab:"Фотообои",
+    lightingTitle:"Жарықтандыру таңдау", allLights:"Барлығы",
+    lightingNext:"Дизайнды көру →", lightingSkip:"Өткізіп жіберу",
+    previewTitle:"Дизайн алдын ала қарау", afterView:"✨ Жаңа дизайн",
+    beforeView:"📷 Түпнұсқа", totalPrice:"Жиыны",
+    saveImg:"🖼️ Сурет", savePdf:"📄 PDF сақтау",
+    beforeNote:"Бұл — бөлменің түпнұсқа күйі",
+    wmNotice:"⚠️ Pro-ға өтіңіз — су таңбасын алып тастаңыз",
+    profileTitle:"Профиль", settingsSection:"Параметрлер",
+    myDesigns:"Менің дизайндарым", myDesignsSub:"Сақталған жобалар",
+    notifications:"Хабарламалар", notificationsOn:"Қосулы",
+    langSetting:"Тіл", versionInfo:"Қолданба туралы",
+    subscribeSection:"Жазылым", upgradeTitle:"Pro-ға өтіңіз",
+    upgradeSub:"Шексіз дизайн, су таңбасыз", upgradeBtn:"Upgrade →",
+    catalogTitle:"Каталог", catalogAll:"Барлығы",
+    adminTitle:"Админ панелі", pendingOrders:"Күтілетін төлемдер",
+    saveTitle:"💾 Нәтижені сақтау", saveSub:"Дизайн қорытындысын жүктеңіз",
+    langTitle:"🌐 Тіл таңдау", langSub:"Қолданба тілін өзгертіңіз",
+    tgTitle:"✈️ Telegram параметрлері", tgSub:"Каталог көзін қосыңыз",
+    closeBtn:"Жабу", cancelBtn:"Бас тарту",
+    ddTitle:"Дизайн", ddMaterial:"Материал", ddLighting:"Жарықтандыру",
+    ddArea:"Аудан", ddPrice:"Баға", ddView:"🎨 Қарау", ddDelete:"🗑️ Жою",
+    saved:"Сақталды ✓", imgSaved:"Сурет сақталды ✓", langSaved:"Сақталды ✓",
+    designCount:"Дизайн", savedCount:"Сақталған", scanCount:"Сканер",
+    material:"Материал", area:"Аудан", lighting:"Жарықтандыру",
+    totalEst:"Жиыны", date:"Күні"
+  },
+  ky: {
+    label:"Кыргызча", home:"Башкы", newDesign:"Жаңы", catalog:"Каталог",
+    profile:"Профиль", admin:"Админ", super:"Супер",
+    newDesignBtn:"Жаңы Дизайн", newDesignSub:"Бөлмөнүн сүрөтүн жүктөңүз",
+    recentDesigns:"Акыркы дизайндар", allBtn:"Баары →",
+    noDesigns:"Дизайн жок", noDesignsSub:"Жаңы дизайн жасаңыз!",
+    uploadTitle:"Сүрөт жүктөө", uploadDrop:"Жүктөө үчүн басыңыз",
+    uploadDropSub:"Бөлмөнүн сүрөтүн тартыңыз же галереядан тандаңыз",
+    uploadFormats:"JPG, PNG · Макс 10МБ",
+    uploadedTitle:"Сүрөт жүктөлдү", analyzeBtn:"Төбөнү талдоо",
+    removePhoto:"Жок кылуу",
+    detectTitle:"AI Аныктоо", detectLoad:"AI төбөнүн контурун аныктоодо...",
+    detectLoadSub:"Gemini Vision API · Иштетилүүдө",
+    detectHint:"Сары чекиттерди сүйрөңүз — контурду тууралаңыз",
+    detectConfirm:"Тастыктоо →", detectRescan:"Кайра скандоо",
+    detectReset:"Калыбына келтирүү",
+    materialTitle:"Материал тандоо", colorSelect:"Түс тандаңыз",
+    photoSelect:"Сүрөт тандаңыз", solidTab:"Бир түстүү", photoTab:"Фотообои",
+    lightingTitle:"Жарыктандыруу тандоо", allLights:"Баары",
+    lightingNext:"Дизайнды көрүү →", lightingSkip:"Өткөрүп жиберүү",
+    previewTitle:"Дизайнды алдын ала көрүү", afterView:"✨ Жаңы дизайн",
+    beforeView:"📷 Баштапкы", totalPrice:"Жыйынтык",
+    saveImg:"🖼️ Сүрөт", savePdf:"📄 PDF сактоо",
+    beforeNote:"Бул — бөлмөнүн баштапкы абалы",
+    wmNotice:"⚠️ Pro га өтүңүз — суу белгисин алып салыңыз",
+    profileTitle:"Профиль", settingsSection:"Жөндөөлөр",
+    myDesigns:"Менин дизайндарым", myDesignsSub:"Сакталган долбоорлор",
+    notifications:"Билдирүүлөр", notificationsOn:"Күйүк",
+    langSetting:"Тил", versionInfo:"Колдонмо жөнүндө",
+    subscribeSection:"Жазылуу", upgradeTitle:"Pro го өтүңүз",
+    upgradeSub:"Чексиз дизайн, суу белгисиз", upgradeBtn:"Upgrade →",
+    catalogTitle:"Каталог", catalogAll:"Баары",
+    adminTitle:"Админ панели", pendingOrders:"Күтүүдөгү төлөмдөр",
+    saveTitle:"💾 Натыйжаны сактоо", saveSub:"Дизайн жыйынтыгын жүктөңүз",
+    langTitle:"🌐 Тил тандоо", langSub:"Колдонмонун тилин өзгөртүңүз",
+    tgTitle:"✈️ Telegram жөндөөлөрү", tgSub:"Каталог булагын туташтырыңыз",
+    closeBtn:"Жабуу", cancelBtn:"Жокко чыгаруу",
+    ddTitle:"Дизайн", ddMaterial:"Материал", ddLighting:"Жарыктандыруу",
+    ddArea:"Аянт", ddPrice:"Баа", ddView:"🎨 Көрүү", ddDelete:"🗑️ Жок кылуу",
+    saved:"Сакталды ✓", imgSaved:"Сүрөт сакталды ✓", langSaved:"Сакталды ✓",
+    designCount:"Дизайн", savedCount:"Сакталган", scanCount:"Скан",
+    material:"Материал", area:"Аянт", lighting:"Жарыктандыруу",
+    totalEst:"Жыйынтык", date:"Күн"
+  },
+  tg: {
+    label:"Тоҷикӣ", home:"Асосӣ", newDesign:"Нав", catalog:"Каталог",
+    profile:"Профил", admin:"Админ", super:"Супер",
+    newDesignBtn:"Дизайни Нав", newDesignSub:"Акси хонаро боргузорӣ кунед",
+    recentDesigns:"Дизайнҳои охирин", allBtn:"Ҳама →",
+    noDesigns:"Дизайн нест", noDesignsSub:"Дизайни нав созед!",
+    uploadTitle:"Боргузории акс", uploadDrop:"Барои боргузорӣ пахш кунед",
+    uploadDropSub:"Акси хонаро гиред ё аз галерея интихоб кунед",
+    uploadFormats:"JPG, PNG · Макс 10МБ",
+    uploadedTitle:"Акс боргузорӣ шуд", analyzeBtn:"Таҳлили шифт",
+    removePhoto:"Нест кардан",
+    detectTitle:"Муайянкунии AI", detectLoad:"AI контури шифтро муайян мекунад...",
+    detectLoadSub:"Gemini Vision API · Коркард",
+    detectHint:"Нуқтаҳои заррро кашед — контурро танзим кунед",
+    detectConfirm:"Тасдиқ →", detectRescan:"Аз нав скан",
+    detectReset:"Барқарорсозӣ",
+    materialTitle:"Интихоби Материал", colorSelect:"Ранг интихоб кунед",
+    photoSelect:"Акс интихоб кунед", solidTab:"Яккаранг", photoTab:"Фотообои",
+    lightingTitle:"Интихоби Равшанӣ", allLights:"Ҳама",
+    lightingNext:"Дизайнро дидан →", lightingSkip:"Гузаштан",
+    previewTitle:"Пешнамоиши дизайн", afterView:"✨ Дизайни нав",
+    beforeView:"📷 Аслӣ", totalPrice:"Ҷамъ",
+    saveImg:"🖼️ Акс", savePdf:"📄 Сохтани PDF",
+    beforeNote:"Ин — ҳолати аслии хонаи шумо",
+    wmNotice:"⚠️ Ба Pro гузаред — аломати обро хориҷ кунед",
+    profileTitle:"Профил", settingsSection:"Танзимот",
+    myDesigns:"Дизайнҳои ман", myDesignsSub:"Лоиҳаҳои захиракардашуда",
+    notifications:"Огоҳиномаҳо", notificationsOn:"Фаъол",
+    langSetting:"Забон", versionInfo:"Дар бораи барнома",
+    subscribeSection:"Обуна", upgradeTitle:"Ба Pro гузаред",
+    upgradeSub:"Дизайни бемаҳдуд, бе аломати об", upgradeBtn:"Upgrade →",
+    catalogTitle:"Каталог", catalogAll:"Ҳама",
+    adminTitle:"Панели Admin", pendingOrders:"Пардохтҳои интизорӣ",
+    saveTitle:"💾 Сохтани натиҷа", saveSub:"Хулосаи дизайнро боргирӣ кунед",
+    langTitle:"🌐 Интихоби забон", langSub:"Забони барномаро тағйир диҳед",
+    tgTitle:"✈️ Танзимоти Telegram", tgSub:"Манбаи каталогро пайваст кунед",
+    closeBtn:"Бастан", cancelBtn:"Бекор кардан",
+    ddTitle:"Дизайн", ddMaterial:"Материал", ddLighting:"Равшанӣ",
+    ddArea:"Майдон", ddPrice:"Нарх", ddView:"🎨 Дидан", ddDelete:"🗑️ Нест кардан",
+    saved:"Сохта шуд ✓", imgSaved:"Акс сохта шуд ✓", langSaved:"Сохта шуд ✓",
+    designCount:"Дизайн", savedCount:"Захира", scanCount:"Скан",
+    material:"Материал", area:"Майдон", lighting:"Равшанӣ",
+    totalEst:"Ҷамъ", date:"Сана"
+  }
+};
+
+let currentLang = localStorage.getItem('shift_lang') || 'uz';
+
+function setLang(code){
+  currentLang = code;
+  localStorage.setItem('shift_lang', code);
+  // Checkmark yangilash
+  ['uz','ru','kk','ky','tg'].forEach(l=>{
+    const el = document.getElementById('lc-'+l);
+    if(el) el.style.opacity = l===code ? '1' : '0';
+  });
+  // Lang item active holati
+  document.querySelectorAll('.lang-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.lang===code);
+  });
+  // Til labelini yangilash
+  const t = LANGS[code];
+  const labelEl = document.getElementById('current-lang-label');
+  if(labelEl) labelEl.textContent = t.label;
+  // Navbar matnlarini yangilash
+  applyLangUI(code);
+  applyRoleUI();
+  toast(t.saved, 'ok');
+  setTimeout(()=>closeM('m-lang'), 600);
+}
+
+function setText(selector, text){
+  const el = document.querySelector('#'+selector) || document.querySelector('.'+selector) ||
+             document.querySelector(selector);
+  if(el && text) el.textContent = text;
+}
+
+function applyLangUI(code){
+  const t = LANGS[code] || LANGS.uz;
+
+  // ── Navbar ──
+  document.querySelectorAll('.nav-btn span').forEach((el,i)=>{
+    const keys = ['home','newDesign','catalog','profile','admin','super'];
+    if(t[keys[i]]) el.textContent = t[keys[i]];
+  });
+
+  // ── Home ──
+  const nbT = document.querySelector('.nb-t');
+  const nbS = document.querySelector('.nb-s');
+  if(nbT) nbT.textContent = t.newDesignBtn;
+  if(nbS) nbS.textContent = t.newDesignSub;
+  const secTitles = document.querySelectorAll('.sec-title');
+  secTitles.forEach(el=>{
+    if(el.textContent.includes('dizayn') || el.textContent.includes('дизайн') ||
+       el.textContent.includes('Дизайн') || el.textContent.includes('дизайндар') ||
+       el.textContent.includes('дизайн')) el.textContent = t.recentDesigns;
+  });
+  const secLinks = document.querySelectorAll('.sec-link');
+  secLinks.forEach(el=>{ if(el.textContent.includes('→')) el.textContent = t.allBtn; });
+
+  // ── Upload ekrani ──
+  setText('s-upload .tb-title', t.uploadTitle);
+  setText('s-upload .ud-s', t.uploadDropSub);
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  if(analyzeBtn) analyzeBtn.textContent = '🔍 ' + t.analyzeBtn;
+  const rmBtn = document.querySelector('#s-upload .remove-btn');
+  if(rmBtn) rmBtn.textContent = '✕ ' + t.removePhoto;
+
+  // ── Detect ekrani ──
+  setText('s-detect .tb-title', t.detectTitle);
+  setText('s-detect .tb-action', t.detectReset);
+  setText('s-detect .load-txt', t.detectLoad);
+  setText('s-detect .load-sub', t.detectLoadSub);
+  setText('s-detect .hint-bar', '✋ ' + t.detectHint);
+  const confirmBtn = document.querySelector('#s-detect .btn-volt:not(#analyzeBtn)');
+  if(confirmBtn && confirmBtn.textContent.includes('→')) confirmBtn.textContent = t.detectConfirm;
+  const rescanBtn = document.querySelector('#s-detect .btn-ghost');
+  if(rescanBtn) rescanBtn.textContent = '🔄 ' + t.detectRescan;
+
+  // ── Material ekrani ──
+  setText('s-material .tb-title', t.materialTitle);
+  document.querySelectorAll('#s-material .sec-title').forEach(el=>{
+    if(el.textContent.includes('Rang') || el.textContent.includes('Цвет') ||
+       el.textContent.includes('Түс') || el.textContent.includes('Ранг'))
+      el.textContent = t.colorSelect;
+    if(el.textContent.includes('Foto') || el.textContent.includes('Фото'))
+      el.textContent = t.photoSelect;
+  });
+  const segSolid = document.getElementById('seg-solid');
+  const segFoto = document.getElementById('seg-foto');
+  if(segSolid) segSolid.textContent = t.solidTab;
+  if(segFoto) segFoto.textContent = t.photoTab;
+  const matNextBtn = document.querySelector('#s-material .btn-volt');
+  if(matNextBtn) matNextBtn.textContent = t.lightingNext;
+
+  // ── Lighting ekrani ──
+  setText('s-lighting .tb-title', t.lightingTitle);
+  const lightSkip = document.querySelector('#s-lighting .tb-action');
+  if(lightSkip) lightSkip.textContent = t.lightingSkip;
+  const lightNext = document.querySelector('#s-lighting .btn-volt');
+  if(lightNext) lightNext.textContent = t.lightingNext;
+  document.querySelectorAll('#s-lighting .cpill').forEach((el,i)=>{
+    if(i===0) el.textContent = t.allLights;
+  });
+
+  // ── Preview ekrani ──
+  setText('s-preview .tb-title', t.previewTitle);
+  const btnAfter = document.getElementById('btn-after');
+  const btnBefore = document.getElementById('btn-before');
+  if(btnAfter) btnAfter.textContent = t.afterView;
+  if(btnBefore) btnBefore.textContent = t.beforeView;
+  const beforeNote = document.querySelector('#view-before .before-note');
+  if(beforeNote) beforeNote.textContent = t.beforeNote;
+  const wmNotice = document.querySelector('.wm-notice');
+  if(wmNotice) wmNotice.textContent = t.wmNotice;
+  const savePngBtn = document.querySelector('#s-preview .btn-ghost');
+  if(savePngBtn) savePngBtn.textContent = t.saveImg;
+  const savePdfBtn = document.querySelector('#s-preview .btn-volt');
+  if(savePdfBtn) savePdfBtn.textContent = t.savePdf;
+  const ptL = document.querySelector('.pt-l');
+  if(ptL) ptL.textContent = t.totalPrice;
+
+  // ── Profil ekrani ──
+  setText('s-profile .tb-title', t.profileTitle);
+  document.querySelectorAll('#s-profile .sec-title').forEach(el=>{
+    const txt = el.textContent.trim();
+    if(txt.includes('Sozlam') || txt.includes('Настр') || txt.includes('Параметр') ||
+       txt.includes('Жөндөө') || txt.includes('Танзим')) el.textContent = t.settingsSection;
+    if(txt.includes('Obuna') || txt.includes('Подпис') || txt.includes('Жазылым') ||
+       txt.includes('Жазылуу') || txt.includes('Обуна')) el.textContent = t.subscribeSection;
+    if(txt.includes('haqida') || txt.includes('приложен') || txt.includes('қолданба') ||
+       txt.includes('колдонмо') || txt.includes('барнома')) el.textContent = t.versionInfo;
+  });
+  document.querySelectorAll('#s-profile .mr-t').forEach(el=>{
+    const txt = el.textContent.trim();
+    if(txt.includes('dizayn') || txt.includes('дизайн') || txt.includes('дизайндар') ||
+       txt.includes('Дизайн')) el.textContent = t.myDesigns;
+    if(txt.includes('Bildir') || txt.includes('Уведом') || txt.includes('Хабарлам') ||
+       txt.includes('Билдирүү') || txt.includes('Огоҳ')) el.textContent = t.notifications;
+    if(txt.includes('Til') || txt.includes('Язык') || txt.includes('Тіл') ||
+       txt.includes('Тил') || txt.includes('Забон')) el.textContent = t.langSetting;
+    if(txt.includes('Versiya') || txt.includes('Версия')) el.textContent = 'Versiya';
+  });
+  document.querySelectorAll('#s-profile .mr-s').forEach(el=>{
+    const txt = el.textContent.trim();
+    if(txt.includes('loyiha') || txt.includes('проект') || txt.includes('жоба') ||
+       txt.includes('долбоор') || txt.includes('лоиҳа')) el.textContent = t.myDesignsSub;
+  });
+  const upgradeTitle = document.querySelector('#s-profile .upgrade-title');
+  if(upgradeTitle) upgradeTitle.textContent = t.upgradeTitle;
+  const upgradeSub = document.querySelector('#s-profile .upgrade-sub');
+  if(upgradeSub) upgradeSub.textContent = t.upgradeSub;
+  const upgradeBtn = document.querySelector('#s-profile .btn-volt');
+  if(upgradeBtn) upgradeBtn.textContent = t.upgradeBtn;
+
+  // ── Profil stat labellar ──
+  const statEls = document.querySelectorAll('#s-profile [style*="font-size:11px"][style*="color:var(--t3)"]');
+  statEls.forEach((el,i)=>{
+    if(i===0) el.textContent = t.designCount;
+    if(i===1) el.textContent = t.savedCount;
+    if(i===2) el.textContent = t.scanCount;
+  });
+
+  // ── Katalog ekrani ──
+  setText('s-catalog .tb-title', t.catalogTitle);
+
+  // ── Modalar ──
+  setText('m-order .sh-title', t.saveTitle);
+  setText('m-order .sh-sub', t.saveSub);
+  setText('m-lang .sh-title', t.langTitle);
+  setText('m-lang .sh-sub', t.langSub);
+  setText('m-tg-settings .sh-title', t.tgTitle);
+  setText('m-tg-settings .sh-sub', t.tgSub);
+
+  // Yopish tugmalari
+  document.querySelectorAll('.btn-ghost').forEach(el=>{
+    if(el.textContent.trim() === 'Yopish' || el.textContent.trim() === 'Закрыть' ||
+       el.textContent.trim() === 'Жабу' || el.textContent.trim() === 'Жабуу' ||
+       el.textContent.trim() === 'Бастан') el.textContent = t.closeBtn;
+    if(el.textContent.trim() === 'Bekor qilish' || el.textContent.trim() === 'Отмена' ||
+       el.textContent.trim() === 'Бас тарту' || el.textContent.trim() === 'Жокко чыгаруу' ||
+       el.textContent.trim() === 'Бекор кардан') el.textContent = t.cancelBtn;
+  });
+
+  // ── My Designs ekrani ──
+  setText('s-my-designs .tb-title', t.myDesigns);
+
+  // ── Design Detail Modal ──
+  document.querySelectorAll('#m-design-detail .os-l').forEach((el,i)=>{
+    const keys = ['ddMaterial','ddLighting','ddArea','ddPrice'];
+    if(t[keys[i]]) el.textContent = t[keys[i]];
+  });
+  const ddViewBtn = document.querySelector('#m-design-detail .btn-volt');
+  if(ddViewBtn) ddViewBtn.textContent = t.ddView;
+
+  // ── Save modal specs ──
+  document.querySelectorAll('#m-order .os-l').forEach((el,i)=>{
+    const keys = ['material','lighting','area','totalEst'];
+    if(t[keys[i]]) el.textContent = t[keys[i]];
+  });
+}
+
+function initLang(){
+  const code = currentLang;
+  // Checkmark
+  const el = document.getElementById('lc-'+code);
+  if(el) el.style.opacity = '1';
+  document.querySelectorAll('.lang-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.lang===code);
+  });
+  const labelEl = document.getElementById('current-lang-label');
+  if(labelEl && LANGS[code]) labelEl.textContent = LANGS[code].label;
+  applyLangUI(code);
+}
+
+// ── DIZAYNLAR TIZIMI (localStorage) ──
+function getDesigns(){
+  try{ return JSON.parse(localStorage.getItem('shift_designs')||'[]'); }
+  catch(e){ return []; }
+}
+
+function saveDesign(design){
+  const list = getDesigns();
+  list.unshift(design); // Yangi dizayn boshiga qo'shiladi
+  if(list.length > 50) list.pop(); // Max 50 ta saqlash
+  localStorage.setItem('shift_designs', JSON.stringify(list));
+}
+
+function deleteDesign(id){
+  const list = getDesigns().filter(d => d.id !== id);
+  localStorage.setItem('shift_designs', JSON.stringify(list));
+  renderRecentDesigns();
+  toast('Dizayn o\'chirildi','ok');
+}
+
+function timeAgo(ts){
+  const diff = Date.now() - ts;
+  const min = Math.floor(diff/60000);
+  const hr = Math.floor(diff/3600000);
+  const day = Math.floor(diff/86400000);
+  if(min < 1) return 'Hozirgina';
+  if(min < 60) return min + ' daqiqa oldin';
+  if(hr < 24) return hr + ' soat oldin';
+  if(day < 7) return day + ' kun oldin';
+  return new Date(ts).toLocaleDateString('uz-UZ');
+}
+
+function renderRecentDesigns(){
+  const el = document.getElementById('recent-designs');
+  if(!el) return;
+  const list = getDesigns();
+  if(list.length === 0){
+    const t = LANGS[currentLang] || LANGS.uz;
+    el.innerHTML = `
+      <div style="text-align:center;padding:32px 18px;color:var(--t3)">
+        <div style="font-size:40px;margin-bottom:10px">🎨</div>
+        <div style="font-size:14px;font-weight:600;color:var(--t2);margin-bottom:6px">${t.noDesigns}</div>
+        <div style="font-size:12px">${t.noDesignsSub}</div>
+      </div>`;
+    return;
+  }
+  el.innerHTML = list.slice(0,5).map(d=>`
+    <div class="ocard" onclick="openDesignDetail('${d.id}')">
+      <div class="o-thumb" style="font-size:24px;background:${d.thumbBg||'var(--ink3)'};border-radius:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        ${d.thumb||'🎨'}
+      </div>
+      <div class="o-info">
+        <div class="o-name">${d.name}</div>
+        <div class="o-meta">${d.material||''} · ${d.area||'?'} m² · ${timeAgo(d.ts)}</div>
+      </div>
+      <span class="o-badge b-ok">Tayyor</span>
+    </div>
+  `).join('');
+
+  // Profil statistikasini yangilash
+  const countEl = document.querySelector('#s-profile .stat-design');
+  if(countEl) countEl.textContent = list.length;
+}
+
+function openDesignDetail(id){
+  const d = getDesigns().find(x=>x.id===id);
+  if(!d) return;
+  // Design detail modal
+  const modal = document.getElementById('m-design-detail');
+  if(modal){
+    document.getElementById('dd-name').textContent = d.name;
+    document.getElementById('dd-material').textContent = d.material||'—';
+    document.getElementById('dd-lighting').textContent = d.lighting||'—';
+    document.getElementById('dd-area').textContent = (d.area||'?') + ' m²';
+    document.getElementById('dd-price').textContent = d.price||'—';
+    document.getElementById('dd-date').textContent = new Date(d.ts).toLocaleString('uz-UZ');
+    document.getElementById('dd-delete-btn').onclick = ()=>{ deleteDesign(id); closeM('m-design-detail'); };
+    openM('m-design-detail');
+  }
+}
+
+function showAllDesigns(){
+  go('s-my-designs');
+  renderAllDesigns();
+}
+
+function renderAllDesigns(){
+  const el = document.getElementById('all-designs-list');
+  if(!el) return;
+  const list = getDesigns();
+  if(list.length === 0){
+    el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--t3)"><div style="font-size:48px;margin-bottom:12px">🎨</div><div>Hali dizayn yo'q</div></div>`;
+    return;
+  }
+  el.innerHTML = list.map(d=>`
+    <div class="ocard" onclick="openDesignDetail('${d.id}')">
+      <div class="o-thumb" style="font-size:24px;background:${d.thumbBg||'var(--ink3)'};border-radius:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        ${d.thumb||'🎨'}
+      </div>
+      <div class="o-info">
+        <div class="o-name">${d.name}</div>
+        <div class="o-meta">${d.material||''} · ${d.area||'?'} m² · ${timeAgo(d.ts)}</div>
+      </div>
+      <span class="o-badge b-ok">Tayyor</span>
+    </div>
+  `).join('');
+}
+
+function saveCurrentDesign(){
+  // Preview ekranidan chaqiriladi
+  const selMat = document.querySelector('.sw.sel .sw-name');
+  const selLight = document.querySelector('.litem.sel .li-name');
+  const design = {
+    id: 'ds_' + Date.now(),
+    name: 'Dizayn #' + (getDesigns().length + 1),
+    material: selMat ? selMat.textContent : 'Standard Glossy',
+    lighting: selLight ? selLight.textContent : 'Track Light',
+    area: '28',
+    price: '2,560,000 so\'m',
+    thumb: '🎨',
+    thumbBg: 'linear-gradient(135deg,#1a1a3a,#2a2a5a)',
+    ts: Date.now()
+  };
+  saveDesign(design);
+  renderRecentDesigns();
+  toast('Dizayn saqlandi ✓','ok');
+}
+
 function uploadRec(){closeM('m-pay');toast('Kvitansiya yuborildi · Super Admin tekshirmoqda','info')}
 
 // TOAST
@@ -2623,6 +4636,27 @@ function toast(msg,type=''){
     home.classList.add('on');
   }
 
+  // Rol UI ni qo'llay
+  applyRoleUI();
+
+  // Dizaynlarni yuklash
+  renderRecentDesigns();
+
+  // Logotipni yuklash
+  initLogoUI();
+
+  // Tilni yuklash
+  initLang();
+
+  // Telegram foydalanuvchi ma'lumotlarini profilga yuklash
+  if(tg?.initDataUnsafe?.user){
+    const u = tg.initDataUnsafe.user;
+    const nameEl = document.getElementById('profile-name');
+    const userEl = document.getElementById('profile-username');
+    if(nameEl) nameEl.textContent = (u.first_name||'') + ' ' + (u.last_name||'');
+    if(userEl) userEl.textContent = u.username ? '@'+u.username : 'Telegram foydalanuvchi';
+  }
+
   // Telegram WebApp haptic feedback
   if(tg){
     document.querySelectorAll('.btn, .nav-btn, .mcard, .litem, .ocard, .pg-item').forEach(el=>{
@@ -2633,5 +4667,19 @@ function toast(msg,type=''){
   }
 })();
 </script>
+
+  <!-- ══════════════ ZOOM MODAL ══════════════ -->
+  <div class="zoom-backdrop" id="zoom-modal">
+    <div class="zoom-label" id="zoom-label">Yangi dizayn</div>
+    <button class="zoom-close" onclick="closeZoomModal()">✕</button>
+    <div class="zoom-content" id="zoom-content" onwheel="onZoomWheel(event)">
+      <div class="zoom-stage" id="zoom-stage"></div>
+    </div>
+    <div class="zoom-controls">
+      <button class="zoom-ctrl-btn" onclick="zoomBy(-0.3)">−</button>
+      <button class="zoom-ctrl-btn" onclick="resetZoom()">⟲</button>
+      <button class="zoom-ctrl-btn" onclick="zoomBy(0.3)">+</button>
+    </div>
+  </div>
 </body>
 </html>
