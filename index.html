@@ -496,6 +496,24 @@ html,body{
   transition:width .8s cubic-bezier(.4,0,.2,1);
 }
 
+/* Tahrirlangan natija preview (Material/Lighting ekranlarida) */
+.result-preview-box{
+  margin:14px 18px;border-radius:14px;overflow:hidden;
+  border:1px solid var(--line);background:var(--ink2);
+}
+.rp-label{
+  padding:8px 14px;font-size:11px;font-weight:700;
+  color:var(--t3);text-transform:uppercase;letter-spacing:.6px;
+  border-bottom:1px solid var(--line);
+}
+.rp-img-wrap{
+  width:100%;min-height:140px;max-height:200px;
+  background:#0a0a1c;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.rp-img-wrap img{width:100%;height:auto;max-height:200px;object-fit:contain;display:block}
+.rp-placeholder{font-size:36px;opacity:.3}
+
 .hint-pill{
   margin:0 18px 8px;padding:7px 14px;
   background:var(--gold-soft);border:1px solid rgba(244,208,63,.15);
@@ -1481,6 +1499,15 @@ html,body{
       <div class="step-dot future"></div>
     </div>
     <div class="scroll">
+      <!-- Tahrirlangan natija preview -->
+      <div class="result-preview-box anim">
+        <div class="rp-label">📐 Tahrirlangan natija</div>
+        <div class="rp-img-wrap">
+          <img id="material-result-preview" style="display:none" src="">
+          <div id="material-result-placeholder" class="rp-placeholder">🖼️</div>
+        </div>
+      </div>
+
       <div class="seg">
         <button class="seg-btn on" id="seg-solid" onclick="setMat('solid')">🎨 Odnotonli</button>
         <button class="seg-btn" id="seg-foto" onclick="setMat('foto')">🖼️ Fotobosma</button>
@@ -1652,6 +1679,15 @@ html,body{
       <div class="step-dot now"></div>
     </div>
     <div class="scroll">
+      <!-- Tahrirlangan natija preview -->
+      <div class="result-preview-box anim">
+        <div class="rp-label">📐 Tahrirlangan natija</div>
+        <div class="rp-img-wrap">
+          <img id="lighting-result-preview" style="display:none" src="">
+          <div id="lighting-result-placeholder" class="rp-placeholder">🖼️</div>
+        </div>
+      </div>
+
       <div class="cat-scroll">
         <button class="cpill on" onclick="selCat(this)">Barchasi</button>
         <button class="cpill" onclick="selCat(this)">💡 Световой</button>
@@ -1793,7 +1829,8 @@ html,body{
       <div id="view-after">
         <div class="prev-card anim">
           <div class="prev-vis" onclick="openZoomModal('after')" style="cursor:zoom-in">
-            <svg viewBox="0 0 300 150" class="prev-svg">
+            <img id="prev-result-img" src="" style="display:none;width:100%;height:100%;object-fit:contain;position:relative;z-index:1">
+            <svg id="prev-fallback-svg" viewBox="0 0 300 150" class="prev-svg">
               <defs>
                 <linearGradient id="ceilG" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" style="stop-color:#e8eaf8;stop-opacity:.92"/>
@@ -2814,6 +2851,9 @@ function go(id){
     prev=cur; cur=id;
   }
   if(id==='s-detect') startDet();
+  if(id==='s-material' || id==='s-lighting' || id==='s-preview'){
+    setTimeout(updateEditedPreviews, 200);
+  }
   if(id==='s-preview'){
     setTimeout(updateAIPrice, 500);
     setTimeout(drawLogoOnPreview, 300);
@@ -3454,12 +3494,128 @@ function drawAll(){
       drawGridInsideContour();
       drawContour();
       drawHandles();
+      captureEditedResult();
     };
     img.src = uploadedImgSrc;
   } else {
     drawGridInsideContour();
     drawContour();
     drawHandles();
+    captureEditedResult();
+  }
+}
+
+// ── TAHRIRLANGAN NATIJANI SAQLASH (handle'larsiz, preview uchun) ──
+let editedResultSrc = null;
+
+function captureEditedResult(){
+  if(!cvs2) return;
+  // Vaqtinchalik canvas — handle'larsiz tozalab chizish
+  const tmp = document.createElement('canvas');
+  tmp.width = cvs2.width;
+  tmp.height = cvs2.height;
+  const tctx = tmp.getContext('2d');
+
+  tctx.fillStyle = '#0a0a1c';
+  tctx.fillRect(0, 0, tmp.width, tmp.height);
+
+  const drawClean = ()=>{
+    drawGridInsideContourOn(tctx);
+    drawContourOn(tctx);
+    editedResultSrc = tmp.toDataURL('image/jpeg', 0.85);
+    updateEditedPreviews();
+  };
+
+  if(uploadedImgSrc){
+    const img = new Image();
+    img.onload = ()=>{
+      tctx.drawImage(img, imgOffsetX, imgOffsetY, imgDrawW||tmp.width, imgDrawH||tmp.height);
+      drawClean();
+    };
+    img.src = uploadedImgSrc;
+  } else {
+    drawClean();
+  }
+}
+
+// Grid va konturni istalgan context'ga chizish (handle'siz)
+function drawGridInsideContourOn(cx){
+  if(!cx || V.length < 4) return;
+  cx.save();
+  cx.beginPath();
+  cx.moveTo(V[0].x, V[0].y);
+  V.slice(1).forEach(v => cx.lineTo(v.x, v.y));
+  cx.closePath();
+  cx.clip();
+
+  const minX = Math.min(...V.map(v=>v.x));
+  const maxX = Math.max(...V.map(v=>v.x));
+  const minY = Math.min(...V.map(v=>v.y));
+  const maxY = Math.max(...V.map(v=>v.y));
+  const W2 = maxX - minX, H2 = maxY - minY;
+
+  if(gridImg){
+    cx.globalAlpha = gridImgOpacity;
+    const imgRatio = gridImg.naturalWidth / gridImg.naturalHeight;
+    const areaRatio = W2 / H2;
+    let drawW, drawH, drawX, drawY;
+    if(imgRatio > areaRatio){
+      drawH = H2; drawW = H2 * imgRatio;
+      drawX = minX - (drawW - W2) / 2; drawY = minY;
+    } else {
+      drawW = W2; drawH = W2 / imgRatio;
+      drawX = minX; drawY = minY - (drawH - H2) / 2;
+    }
+    cx.drawImage(gridImg, drawX, drawY, drawW, drawH);
+    cx.globalAlpha = 1;
+  }
+  cx.restore();
+}
+
+function drawContourOn(cx){
+  if(!cx || V.length < 4) return;
+  cx.beginPath();
+  cx.moveTo(V[0].x, V[0].y);
+  V.slice(1).forEach(v => cx.lineTo(v.x, v.y));
+  cx.closePath();
+  cx.strokeStyle = 'rgba(99,130,255,0.95)';
+  cx.lineWidth = 2;
+  cx.stroke();
+  if(!gridImg && !uploadedImgSrc){
+    cx.fillStyle = 'rgba(67,97,238,0.12)';
+    cx.fill();
+  }
+}
+
+// Material, Lighting, Preview ekranlarida natijani ko'rsatish
+function updateEditedPreviews(){
+  if(!editedResultSrc) return;
+
+  // Preview ekrani
+  const prevImg = document.getElementById('prev-result-img');
+  const prevFallback = document.getElementById('prev-fallback-svg');
+  if(prevImg){
+    prevImg.src = editedResultSrc;
+    prevImg.style.display = 'block';
+    if(prevFallback) prevFallback.style.display = 'none';
+  }
+
+  // Material ekrani — kichik preview
+  const matPreview = document.getElementById('material-result-preview');
+  if(matPreview){
+    matPreview.src = editedResultSrc;
+    matPreview.style.display = 'block';
+    const matPlaceholder = document.getElementById('material-result-placeholder');
+    if(matPlaceholder) matPlaceholder.style.display = 'none';
+  }
+
+  // Lighting ekrani — kichik preview
+  const lightPreview = document.getElementById('lighting-result-preview');
+  if(lightPreview){
+    lightPreview.src = editedResultSrc;
+    lightPreview.style.display = 'block';
+    const lightPlaceholder = document.getElementById('lighting-result-placeholder');
+    if(lightPlaceholder) lightPlaceholder.style.display = 'none';
   }
 }
 
